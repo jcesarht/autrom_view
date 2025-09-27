@@ -1,0 +1,54 @@
+@import "tailwindcss";
+@import "datatables.net-dt";
+@import 'datatables.net-responsive-dt';
+/*tailwindcss customize */
+@theme{
+  --breakpoint-xs: 30rem;
+}
+.active {
+  @apply transition translate-x-0 duration-300 ;
+}
+/*end customize tailwindcss*/
+
+:root{
+    font-family: sans-serif;
+    color: #777777;
+}
+
+/* Base button */
+.btn {
+  @apply px-2 py-2 font-medium text-white rounded shadow-sm transition duration-200 ease-in-out cursor-pointer;
+}
+
+/* status colors */
+.btn-primary {
+  @apply bg-blue-600 hover:bg-blue-300;
+}
+
+.btn-secondary {
+  @apply bg-gray-600 hover:bg-gray-300;
+}
+
+.btn-success {
+  @apply bg-green-600 hover:bg-green-300;
+}
+
+.btn-danger {
+  @apply bg-red-600 hover:bg-red-300;
+}
+
+.btn-warning {
+  @apply bg-yellow-500 hover:bg-yellow-600 text-black;
+}
+
+.btn-info {
+  @apply bg-blue-400 hover:bg-cyan-300;
+}
+
+.btn-light {
+  @apply bg-gray-100 text-gray-800 hover:bg-gray-200;
+}
+
+.btn-dark {
+  @apply bg-gray-900 hover:bg-black;
+}
