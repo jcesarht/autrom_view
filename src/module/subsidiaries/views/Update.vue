@@ -99,8 +99,8 @@
                 <div>
                      <UIInputText 
                         name="sub_name"
-                        placeholder="Sub name"
-                        field="Sub name"
+                        placeholder="Name"
+                        field="Name"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.sub_name"
                         required="true"
@@ -109,8 +109,8 @@
                 <div>
                      <UIInputText 
                         name="sub_phone"
-                        placeholder="Sub phone"
-                        field="Sub phone"
+                        placeholder="Phone"
+                        field="Phone"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.sub_phone"
                         required="false"
@@ -119,8 +119,8 @@
                 <div>
                      <UIInputText 
                         name="sub_country"
-                        placeholder="Sub country"
-                        field="Sub country"
+                        placeholder="Country"
+                        field="Country"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.sub_country"
                         required="false"
@@ -129,8 +129,8 @@
                 <div>
                      <UIInputText 
                         name="sub_state"
-                        placeholder="Sub state"
-                        field="Sub state"
+                        placeholder="State"
+                        field="State"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.sub_state"
                         required="false"
@@ -139,8 +139,8 @@
                 <div>
                      <UIInputText 
                         name="sub_city"
-                        placeholder="Sub city"
-                        field="Sub city"
+                        placeholder="City"
+                        field="City"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.sub_city"
                         required="false"
@@ -149,8 +149,8 @@
                 <div>
                      <UIInputText 
                         name="sub_address"
-                        placeholder="Sub address"
-                        field="Sub address"
+                        placeholder="Address"
+                        field="Address"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.sub_address"
                         required="false"
@@ -170,8 +170,8 @@
                 <div>
                      <UIInputText 
                         name="com"
-                        placeholder="Com"
-                        field="Com"
+                        placeholder="Company"
+                        field="Company"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com"
                         required="true"
