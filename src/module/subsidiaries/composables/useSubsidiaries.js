@@ -43,7 +43,7 @@ export function useSubSidiarieS(){
             }
             const result_data = res.result.data
             const columns = []
-            const title = ["Id","Name","Phone","Country","State","City","Postal Address","Expiration Date","Company","Create at","Update at"]
+            const title = ["Id","Nombre de la Sucursal","Teléfono","País","Estado / Dpto","Ciudad","Dirección Postal","Fecha de Expiración","Compañia","Fecha de Creación","Fecha de Actualización"]
             let index = 0
             for (const column in result_data[0]) {
                 columns.push( {data: column,title: title[index]} )

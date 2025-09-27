@@ -99,8 +99,8 @@
                 <div>
                      <UIInputText 
                         name="com_name"
-                        placeholder="Company Name"
-                        field="Company Name"
+                        placeholder="Compañia"
+                        field="Compañia"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com_name"
                         required="true"
@@ -129,8 +129,8 @@
                 <div>
                      <UIInputText 
                         name="com_total_number_of_car"
-                        placeholder="Number of Car"
-                        field="Number of Car"
+                        placeholder="Numbero de Carros"
+                        field="Numbero de Carros"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com_total_number_of_car.toString()"
                         required="true"
@@ -139,8 +139,8 @@
                 <div>
                      <UIInputText 
                         name="com_base_price"
-                        placeholder="Base Price"
-                        field="Base Price"
+                        placeholder="Precio Base"
+                        field="Precio Base"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com_base_price"
                         required="true"
@@ -149,8 +149,8 @@
                 <div>
                      <UIInputText 
                         name="com_price_sales"
-                        placeholder="Price Sales"
-                        field="Price Sales"
+                        placeholder="Precio"
+                        field="Precio"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com_price_sales"
                         required="true"
@@ -159,8 +159,8 @@
                 <div>
                      <UIInputText 
                         name="com_currency"
-                        placeholder="Currency"
-                        field="Currency"
+                        placeholder="Moneda"
+                        field="Moneda"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com_currency"
                         required="true"
@@ -169,8 +169,8 @@
                 <div>
                      <UIInputText 
                         name="com_taxes"
-                        placeholder="Taxes"
-                        field="Taxes"
+                        placeholder="Impuesto"
+                        field="Impuesto"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com_taxes"
                         required="false"
@@ -179,8 +179,8 @@
                 <div>
                      <UIInputText 
                         name="com_withholding_tax"
-                        placeholder="Withholding Tax"
-                        field="Withholding Tax"
+                        placeholder="Retenciones"
+                        field="Retenciones"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com_withholding_tax"
                         required="false"
@@ -190,8 +190,8 @@
                     <UIInputDate
                         name="com_expiration_date"
                         id="com_expiration_date_updated"
-                        placeholder="Expiration Date"
-                        field="Expiration Date"
+                        placeholder="Fecha de Expiración"
+                        field="Fecha de Expiración"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com_expiration_date"
                         required="true"

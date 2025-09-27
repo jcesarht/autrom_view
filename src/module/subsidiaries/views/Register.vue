@@ -14,8 +14,8 @@
                 <div>
                      <UIInputText 
                         name="sub_name"
-                        placeholder="Name"
-                        field="Name"
+                        placeholder="Nombre de la Sucursal"
+                        field="Nombre de la Sucursal"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -23,8 +23,8 @@
                 <div>
                      <UIInputText 
                         name="sub_phone"
-                        placeholder="Phone"
-                        field="Phone"
+                        placeholder="Teléfono"
+                        field="Teléfono"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -32,8 +32,8 @@
                 <div>
                      <UIInputText 
                         name="sub_country"
-                        placeholder="Country"
-                        field="Country"
+                        placeholder="País"
+                        field="País"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -41,8 +41,8 @@
                 <div>
                      <UIInputText 
                         name="sub_state"
-                        placeholder="State"
-                        field="State"
+                        placeholder="Estado / Dpto"
+                        field="Estado / Dpto"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -50,8 +50,8 @@
                 <div>
                      <UIInputText 
                         name="sub_city"
-                        placeholder="City"
-                        field="City"
+                        placeholder="Ciudad"
+                        field="Ciudad"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -59,8 +59,8 @@
                 <div>
                      <UIInputText 
                         name="sub_address"
-                        placeholder="Postal Address"
-                        field="Postal Address"
+                        placeholder="Dirección Postal"
+                        field="Dirección Postal"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -68,8 +68,8 @@
                 <div>
                      <UIInputDate 
                         name="sub_expiration_date"
-                        placeholder="Expiration date"
-                        field="Expiration date"
+                        placeholder="Fecha de Expiración"
+                        field="Fecha de Expiración"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -77,8 +77,8 @@
                 <div>
                      <UIInputText 
                         name="com"
-                        placeholder="Company"
-                        field="Company"
+                        placeholder="Compañia"
+                        field="Compañia"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />

@@ -43,7 +43,7 @@ export function useCompanies(){
             }
             const result_data = res.result.data
             const columns = []
-            const title = ["Id","Company Name","Itim","Logo","Total Number Of Car","Base Price","Price Sales","Currency","Taxes","Withholding Tax","Expiration Date"]
+            const title = ["Id","Compañia","Itim","Logo","Numbero de Carros","Precio Base","Precio","Moneda","Impuesto","Retenciones","Fecha de Expiración"]
             let index = 0;
             for (const column in result_data[0]) {
                 columns.push( {data: column,title: title[index]} );
