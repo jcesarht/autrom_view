@@ -43,8 +43,11 @@ export function useRates_opeRatives(){
             }
             const result_data = res.result.data
             const columns = []
+            const title = ["ID","Nombre de la Tarifa","Valor de la Tarifa","Valor del Depositos","Fecha Anterior por Defecto","Comentarios","Compañia","Sucursal"]
+            let index = 0
             for (const column in result_data[0]) {
-                columns.push( {data: column,title: (column.charAt(0).toUpperCase() + column.slice(1)).replace("_"," ")} )
+                columns.push( {data: column,title: title[index]} )
+                index++
             }
             columns.push({data: "actions_buttons", title: "Actions"})
             //add actions buttons to each row

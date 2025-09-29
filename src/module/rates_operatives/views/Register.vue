@@ -14,8 +14,8 @@
                 <div>
                      <UIInputText 
                         name="raop_name"
-                        placeholder="Raop name"
-                        field="Raop name"
+                        placeholder="Nombre de la Tarifa"
+                        field="Nombre de la Tarifa"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -23,8 +23,8 @@
                 <div>
                      <UIInputText 
                         name="raop_value"
-                        placeholder="Raop value"
-                        field="Raop value"
+                        placeholder="Valor de la Tarifa"
+                        field="Valor de la Tarifa"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -32,7 +32,7 @@
                 <div>
                      <UIInputText 
                         name="raop_drivers_save_value_default"
-                        placeholder="Raop drivers save value default"
+                        placeholder="Valor del Depositos"
                         field="Raop drivers save value default"
                         :ref="element => inputs.push(element)"
                         required="false"
@@ -41,8 +41,8 @@
                 <div>
                      <UIInputText 
                         name="raop_before_date_deafult"
-                        placeholder="Raop before date deafult"
-                        field="Raop before date deafult"
+                        placeholder="Inicializar la Liquidación con la fecha del día anterior a la fecha actual"
+                        field="Fecha Anterior por Defecto"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -50,8 +50,8 @@
                 <div>
                      <UIInputText 
                         name="raop_comment"
-                        placeholder="Raop comment"
-                        field="Raop comment"
+                        placeholder="Comentarios"
+                        field="Comentarios"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -70,24 +70,6 @@
                         name="sub"
                         placeholder="Sub"
                         field="Sub"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="raop_create_at"
-                        placeholder="Raop create at"
-                        field="Raop create at"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="raop_update_at"
-                        placeholder="Raop update at"
-                        field="Raop update at"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
