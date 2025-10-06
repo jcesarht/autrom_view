@@ -83,6 +83,27 @@
                     />
                 </div>
                 <div>
+                    <UIAutocomplete
+                        v-model="selected"
+                        :items="countries"
+                        :getLabel="c => c.name"
+                        :itemKey="c => c.code"
+                        required="true"
+                        field ="País"
+                        placeholder ="País"
+                        @select="onSelect"
+                        :ref="element => inputs.push(element)"
+                    >
+                        <template #item="{ item }">
+                            <div class="flex justify-between w-full">
+                                <span>{{ item.name }}</span>
+                                <small class="text-gray-400">{{ item.code }}</small>
+                            </div>
+                        </template>
+                    </UIAutocomplete>
+
+                </div>
+                <div>
                      <UIInputText 
                         name="com_withholding_tax"
                         placeholder="Com withholding tax"
@@ -115,6 +136,7 @@
     import baseInfoSign from '@/components/base/baseInfoSign.vue';
     import { useOverlay } from '@/stores/useOverlay';
     import { useCompanies } from '../composables/useCompanies';
+    import UIAutocomplete from '@/components/UIComponents/UIAutocomplete.vue';
     
     //initialize  reactive variable
     const inputs = ref([])
@@ -165,6 +187,7 @@
         const data = []
         if (!response.error) {
             inputs.value.some((input)=>{
+                console.log(input.attribute.name, input.valueInput())
                 data[input.attribute.name] = input.valueInput()
             })
             response.data = data;
@@ -178,5 +201,20 @@
             input.reset()
         })
     }
+
+
+    const countries = [
+  { code: 'CO', name: 'Colombia' },
+  { code: 'AR', name: 'Argentina' },
+  { code: 'CL', name: 'Chile' },
+  { code: 'MX', name: 'México' },
+  { code: 'PE', name: 'Perú' },
+]
+
+const selected = ref(null)
+
+function onSelect(item) {
+  console.log('Seleccionado:', item)
+}
 
 </script>
