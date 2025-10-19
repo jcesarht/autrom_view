@@ -75,13 +75,25 @@
                     />
                 </div>
                 <div>
-                     <UIInputText 
+                    <UIAutocomplete
                         name="com"
-                        placeholder="Compañia"
-                        field="Compañia"
-                        :ref="element => inputs.push(element)"
+                        v-model="selected_company"
+                        :items="autocomplete_companies"
+                        :getLabel="c => c.name"
+                        :itemKey="c => c.code"
                         required="true"
-                    />
+                        field ="Compañia"
+                        placeholder ="Compañia"
+                        @select="onSelect"
+                        :ref="element => inputs.push(element)"
+                    >
+                        <template #item="{ item }">
+                            <div class="flex justify-between w-full">
+                                <span>{{ item.name }}</span>
+                                <small class="text-gray-400">{{ item.code }}</small>
+                            </div>
+                        </template>
+                    </UIAutocomplete>
                 </div>
                 <div class="w-30">
                     <UIButton textButton="Save" />
@@ -91,10 +103,11 @@
     </div>
 </template>
 <script setup>
-    import {ref} from 'vue';
+    import {ref, onMounted} from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
     import UIInputDate from '@/components/UIComponents/UIInputDate.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
+    import UIAutocomplete from '../../../components/UIComponents/UIAutocomplete.vue';
     import baseInfoSign from '@/components/base/baseInfoSign.vue';
     import { useOverlay } from '@/stores/useOverlay';
     import { useSubSidiarieS } from '../composables/useSubSidiarieS';
@@ -105,7 +118,8 @@
     const typeInfo = ref("error")
     const infoMessage = ref(null)
     const disableButton = ref(false)
-    const { save, error, message } = useSubSidiarieS()
+    const { save, error, message, autocompleteDataCompany } = useSubSidiarieS()
+    const autocomplete_companies = ref([])
     
     //overlay function
     const overlay = useOverlay()
@@ -161,5 +175,16 @@
             input.reset()
         })
     }
+
+    const selected_company = ref(null)
+
+    function onSelect(item) {
+        console.log('Seleccionado:', item)
+    }
+
+    onMounted(async()=>{
+        autocomplete_companies.value = await autocompleteDataCompany()
+    });
+
 
 </script>

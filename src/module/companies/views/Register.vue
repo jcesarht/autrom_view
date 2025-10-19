@@ -129,7 +129,7 @@
     </div>
 </template>
 <script setup>
-    import {ref} from 'vue';
+    import {onMounted, ref} from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
     import UIInputDate from '@/components/UIComponents/UIInputDate.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
@@ -144,7 +144,8 @@
     const typeInfo = ref("error")
     const infoMessage = ref(null)
     const disableButton = ref(false)
-    const { save, error, message } = useCompanies()
+    const countries = ref(false)
+    const { save, error, message, autocompleteData } = useCompanies()
     
     //overlay function
     const overlay = useOverlay()
@@ -187,7 +188,6 @@
         const data = []
         if (!response.error) {
             inputs.value.some((input)=>{
-                console.log(input.attribute.name, input.valueInput())
                 data[input.attribute.name] = input.valueInput()
             })
             response.data = data;
@@ -202,19 +202,13 @@
         })
     }
 
+    const selected = ref(null)
 
-    const countries = [
-  { code: 'CO', name: 'Colombia' },
-  { code: 'AR', name: 'Argentina' },
-  { code: 'CL', name: 'Chile' },
-  { code: 'MX', name: 'México' },
-  { code: 'PE', name: 'Perú' },
-]
-
-const selected = ref(null)
-
-function onSelect(item) {
-  console.log('Seleccionado:', item)
-}
+    onMounted(async()=>{
+        countries.value = await autocompleteData()
+    });
+    function onSelect(item) {
+    console.log('Seleccionado:', item)
+    }
 
 </script>

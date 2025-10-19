@@ -101,42 +101,6 @@
                         required="false"
                     />
                 </div>
-                <div>
-                     <UIInputText 
-                        name="sub"
-                        placeholder="Sub"
-                        field="Sub"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="com"
-                        placeholder="Com"
-                        field="Com"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="own_create_at"
-                        placeholder="Own create at"
-                        field="Own create at"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="own_update_at"
-                        placeholder="Own update at"
-                        field="Own update at"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
                 <div class="w-30">
                     <UIButton textButton="Save" />
                 </div>

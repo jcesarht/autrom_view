@@ -256,31 +256,31 @@ function onInput() {
       if (el) el.scrollIntoView({ block: 'nearest' })
     }
 
-function onEnter() {
-  if (highlighted.value >= 0) select(filtered.value[highlighted.value])
-  else if (filtered.value.length === 1) select(filtered.value[0])
-}
-
-function onTab() {
-  // If tabbing and there's a highlighted item, select it
-  if (highlighted.value >= 0) select(filtered.value[highlighted.value])
-}
-
-function select(item) {
-  const val = item
-  emit('update:modelValue', val)
-  emit('select', val)
-  input_value.value = typeof val === 'object' ? display(val) : String(val)
-  selected.value = val
-  close()
-}
-
-function clear() {
-  input_value.value = ''
-  internalItems.value = []
-  emit('update:modelValue', '')
-  open()
-}
+    function onEnter() {
+      if (highlighted.value >= 0) select(filtered.value[highlighted.value])
+      else if (filtered.value.length === 1) select(filtered.value[0])
+    }
+    
+    function onTab() {
+      // If tabbing and there's a highlighted item, select it
+      if (highlighted.value >= 0) select(filtered.value[highlighted.value])
+    }
+    
+    function select(item) {
+      const val = item
+      emit('update:modelValue', val)
+      emit('select', val)
+      input_value.value = typeof val === 'object' ? display(val) : String(val)
+      selected.value = val
+      close()
+    }
+    
+    function clear() {
+      input_value.value = ''
+      internalItems.value = []
+      emit('update:modelValue', '')
+      open()
+    }
 
 // ----------------------
 // Sync with v-model / outside

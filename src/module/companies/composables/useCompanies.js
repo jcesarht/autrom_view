@@ -118,5 +118,30 @@ export function useCompanies(){
         }
     }
 
-    return { error, loading, data, dataForUpdate, message, query, save, update, remove }
+    const autocompleteData = async ( filter = undefined )=>{
+        const autocomplete_data = []
+        try{
+            loading.value = true;
+            error.value = true;
+            message.value = '';
+            const {token} = useUserLoginStore()
+            const res = await companiesService.query( filter, {"token":token} )
+            if (res.error){
+                throw Error(res.result.message)
+            }
+
+            const result_data = res.result.data
+            for (let i = 0; i < result_data.length; i++) {
+                autocomplete_data.push( {code: result_data[i].com_id, name: result_data[i].com_name} )
+            }
+        }catch(err_catch){
+            message.value= "Something was wrong with query process"
+        } finally {
+            loading.value = false;
+        }
+        
+        return autocomplete_data;
+    }
+
+    return { error, loading, data, dataForUpdate, message, query, save, update, remove, autocompleteData }
 }

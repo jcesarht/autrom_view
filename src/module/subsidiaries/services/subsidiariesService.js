@@ -143,5 +143,38 @@ export const subsidiariesService = {
         }
         
         return response
+    },
+
+    async queryAutoCompleteCompanies( data = null , header_param = null) {
+        const fields = {}
+        if (data != null){
+            for (const [key, value] of Object.entries(data)){
+                fields[key] = value
+            }
+        }
+        
+        const response={
+            error:true, 
+            result:{
+                http_status: 500,
+                message: "",
+                data:null
+            }
+        }
+        if (header_param != null){
+            axiosInstance.setHeader(header_param)
+        }
+        try{
+            const url_request = 'api/v1/companies_app/'
+            response.result.data = await axiosInstance.get(url_request,fields)
+            response.result.http_status = response.result.data.data.http_status
+            response.result.data = response.result.data.data.data
+            response.result.message = "Responsed successfully in companies service."
+            response.error = false
+        }catch( error ){
+            response.result.http_status = error.http_status ?? 500
+            response.result.message = error.message ?? 'Unexpected error'
+        }
+        return response
     }
 }
