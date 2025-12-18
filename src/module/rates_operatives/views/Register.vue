@@ -33,7 +33,7 @@
                      <UIInputText 
                         name="raop_drivers_save_value_default"
                         placeholder="Valor del Depositos"
-                        field="Raop drivers save value default"
+                        field="Valor del Depositos"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -52,24 +52,6 @@
                         name="raop_comment"
                         placeholder="Comentarios"
                         field="Comentarios"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="com"
-                        placeholder="Com"
-                        field="Com"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="sub"
-                        placeholder="Sub"
-                        field="Sub"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />

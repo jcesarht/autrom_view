@@ -43,9 +43,10 @@ export function useRates_opeRatives(){
             }
             const result_data = res.result.data
             const columns = []
-            const title = ["ID","Nombre de la Tarifa","Valor de la Tarifa","Valor del Depositos","Fecha Anterior por Defecto","Comentarios","Compañia","Sucursal"]
+            const title = ["ID","Nombre de la Tarifa","Valor de la Tarifa","Valor del Depositos","Fecha Anterior por Defecto","Comentarios"]
             let index = 0
             for (const column in result_data[0]) {
+                if (column === "sub" || column === "com") continue;
                 columns.push( {data: column,title: title[index]} )
                 index++
             }

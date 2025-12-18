@@ -40,24 +40,6 @@
                 </div>
                 <div>
                      <UIInputText 
-                        name="own_login"
-                        placeholder="Own login"
-                        field="Own login"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="own_password_hash"
-                        placeholder="Own password hash"
-                        field="Own password hash"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
                         name="own_email"
                         placeholder="Own email"
                         field="Own email"

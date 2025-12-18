@@ -215,46 +215,7 @@
                         required="false"
                     />
                 </div>
-                <div>
-                     <UIInputText 
-                        name="com"
-                        placeholder="Com"
-                        field="Com"
-                        :ref="element => inputs.push(element)"
-                        :value="props.dataForUpdate.com"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="sub"
-                        placeholder="Sub"
-                        field="Sub"
-                        :ref="element => inputs.push(element)"
-                        :value="props.dataForUpdate.sub"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="veh_create_at"
-                        placeholder="Veh create at"
-                        field="Veh create at"
-                        :ref="element => inputs.push(element)"
-                        :value="props.dataForUpdate.veh_create_at"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="veh_update_at"
-                        placeholder="Veh update at"
-                        field="Veh update at"
-                        :ref="element => inputs.push(element)"
-                        :value="props.dataForUpdate.veh_update_at"
-                        required="false"
-                    />
-                </div>
+                
                 <div class="w-30">
                     <UIButton textButton="Update" />
                 </div>

@@ -57,7 +57,7 @@
                     />
                 </div>
                 <div>
-                     <UIInputText 
+                     <UIInputDate 
                         name="dri_birthday"
                         placeholder="Dri birthday"
                         field="Dri birthday"
@@ -101,42 +101,6 @@
                         required="false"
                     />
                 </div>
-                <div>
-                     <UIInputText 
-                        name="dri_create_at"
-                        placeholder="Dri create at"
-                        field="Dri create at"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="dri_update_at"
-                        placeholder="Dri update at"
-                        field="Dri update at"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="com"
-                        placeholder="Com"
-                        field="Com"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="sub"
-                        placeholder="Sub"
-                        field="Sub"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
                 <div class="w-30">
                     <UIButton textButton="Save" />
                 </div>
@@ -147,6 +111,7 @@
 <script setup>
     import {ref} from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
+    import UIInputDate from '@/components/UIComponents/UIInputDate.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
     import baseInfoSign from '@/components/base/baseInfoSign.vue';
     import { useOverlay } from '@/stores/useOverlay';

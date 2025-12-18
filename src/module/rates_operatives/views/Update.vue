@@ -145,26 +145,6 @@
                         required="false"
                     />
                 </div>
-                <div>
-                     <UIInputText 
-                        name="com"
-                        placeholder="Com"
-                        field="Com"
-                        :ref="element => inputs.push(element)"
-                        :value="props.dataForUpdate.com"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="sub"
-                        placeholder="Sub"
-                        field="Sub"
-                        :ref="element => inputs.push(element)"
-                        :value="props.dataForUpdate.sub"
-                        required="false"
-                    />
-                </div>
                 <div class="w-30">
                     <UIButton textButton="Update" />
                 </div>
