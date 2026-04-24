@@ -14,8 +14,8 @@
                 <div>
                      <UIInputText 
                         name="dri_dni"
-                        placeholder="Dri dni"
-                        field="Dri dni"
+                        placeholder="DNI/Identification"
+                        field="DNI/Identification"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -23,8 +23,8 @@
                 <div>
                      <UIInputText 
                         name="dri_firts_name"
-                        placeholder="Dri firts name"
-                        field="Dri firts name"
+                        placeholder="Nombres"
+                        field="Nombres"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -32,8 +32,8 @@
                 <div>
                      <UIInputText 
                         name="dri_last_name"
-                        placeholder="Dri last name"
-                        field="Dri last name"
+                        placeholder="Apellidos"
+                        field="Apellidos"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -41,8 +41,8 @@
                 <div>
                      <UIInputText 
                         name="dri_qualify"
-                        placeholder="Dri qualify"
-                        field="Dri qualify"
+                        placeholder="Calificación"
+                        field="Calificación"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -50,8 +50,8 @@
                 <div>
                      <UIInputText 
                         name="dri_phone"
-                        placeholder="Dri phone"
-                        field="Dri phone"
+                        placeholder="Telefóno"
+                        field="Telefóno"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -59,8 +59,8 @@
                 <div>
                      <UIInputDate 
                         name="dri_birthday"
-                        placeholder="Dri birthday"
-                        field="Dri birthday"
+                        placeholder="Cumpleaños"
+                        field="Cumpleaños"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -68,8 +68,8 @@
                 <div>
                      <UIInputText 
                         name="dri_email"
-                        placeholder="Dri email"
-                        field="Dri email"
+                        placeholder="Email"
+                        field="Email"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -77,8 +77,8 @@
                 <div>
                      <UIInputText 
                         name="dri_country"
-                        placeholder="Dri country"
-                        field="Dri country"
+                        placeholder="País"
+                        field="País"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -86,8 +86,8 @@
                 <div>
                      <UIInputText 
                         name="dri_state"
-                        placeholder="Dri state"
-                        field="Dri state"
+                        placeholder="Estado / Departamento"
+                        field="Estado / Departamento"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -95,8 +95,8 @@
                 <div>
                      <UIInputText 
                         name="dri_city"
-                        placeholder="Dri city"
-                        field="Dri city"
+                        placeholder="Ciudad"
+                        field="Ciudad"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
