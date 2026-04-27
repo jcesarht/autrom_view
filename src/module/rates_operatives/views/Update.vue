@@ -1,6 +1,7 @@
 <script setup>
     import {ref} from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
+    import UICheckbox from '@/components/UIComponents/UICheckbox.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
     import baseInfoSign from '@/components/base/baseInfoSign.vue';
     import { useOverlay } from '@/stores/useOverlay';
@@ -126,12 +127,14 @@
                     />
                 </div>
                 <div>
-                     <UIInputText 
+                    <UICheckbox
                         name="raop_before_date_deafult"
-                        placeholder="Inicializar la Liquidación con la fecha del día anterior a la fecha actual"
                         field="Fecha Anterior por Defecto"
-                        :ref="element => inputs.push(element)"
+                        ruleText="Inicializar la liquidación con la fecha del día anterior"
+                        :checkedValue="1"
+                        :uncheckedValue="0"
                         :value="props.dataForUpdate.raop_before_date_deafult"
+                        :ref="element => inputs.push(element)"
                         required="false"
                     />
                 </div>

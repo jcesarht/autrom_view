@@ -16,7 +16,17 @@ export function useRates_opeRatives(){
             error.value = true;
             message.value = '';
             const {token} = useUserLoginStore()
-            const res = await rates_operativesService.save( param_data, {"token":token} )
+
+            // Strip null, undefined and empty-string values — the backend
+            // injects sub/com from the token; sending them as null would
+            // overwrite the server-side assignment.
+            const cleanData = Object.fromEntries(
+                Object.entries(param_data).filter(
+                    ([, v]) => v !== null && v !== undefined && v !== ''
+                )
+            )
+
+            const res = await rates_operativesService.save( cleanData, {"token":token} )
             if (res.error){
                 throw Error(res.result.message)
             }
@@ -31,6 +41,7 @@ export function useRates_opeRatives(){
 
     }
 
+
     const query = async (filter = undefined)=>{
         try{
             loading.value = true;
@@ -43,11 +54,33 @@ export function useRates_opeRatives(){
             }
             const result_data = res.result.data
             const columns = []
-            const title = ["ID","Nombre de la Tarifa","Valor de la Tarifa","Valor del Depositos","Fecha Anterior por Defecto","Comentarios"]
+            const title = [
+                "ID",
+                "Nombre de la Tarifa",
+                "Valor de la Tarifa",
+                "Valor del Depositos",
+                "Fecha Anterior por Defecto",
+                "Comentarios",
+                "Fecha de Creación",
+                "Fecha de Actualización"
+            ]
+            const dateColumns = ["raop_create_at", "raop_update_at"]
             let index = 0
             for (const column in result_data[0]) {
                 if (column === "sub" || column === "com") continue;
-                columns.push( {data: column,title: title[index]} )
+                if (dateColumns.includes(column)) {
+                    columns.push({
+                        data: column,
+                        title: title[index],
+                        render: (data) => {
+                            if (!data) return '';
+                            // Remove timezone info — keep only "YYYY-MM-DD HH:MM:SS"
+                            return data.replace('T', ' ').substring(0, 19);
+                        }
+                    })
+                } else {
+                    columns.push( {data: column, title: title[index]} )
+                }
                 index++
             }
             columns.push({data: "actions_buttons", title: "Actions"})
