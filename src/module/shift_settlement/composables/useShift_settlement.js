@@ -1,6 +1,6 @@
 import {shift_settlementService } from "../services/shift_settlementService"; 
 import { useUserLoginStore } from "../../userLogin/stores/useUserLoginStore";
-import { useActionsTableRecord } from "@/composables/useHelper";
+import { useActionsTableRecord, formatDate } from "@/composables/useHelper";
 import { ref, reactive } from "vue";
 
 export function useShift_Settlement(){
@@ -52,6 +52,11 @@ export function useShift_Settlement(){
             for (let i = 0; i < result_data.length; i++) {
                 if (result_data[i].shiset_id) {
                     result_data[i].actions_buttons = useActionsTableRecord(result_data[i].shiset_id);
+                }
+
+                // Format dates
+                for (const key in result_data[i]) {
+                    result_data[i][key] = formatDate(result_data[i][key]);
                 }
 
                 dataForUpdate[result_data[i].shiset_id] = result_data[i];

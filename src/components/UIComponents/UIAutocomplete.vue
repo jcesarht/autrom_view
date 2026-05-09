@@ -103,6 +103,7 @@
         },
         getLabel: { type: Function, default: (i) => (typeof i === 'object' && i !== null ? i.label ?? i.name ?? String(i) : String(i)) },
         itemKey: { type: Function, default: (i, idx) => (i && i.id) ?? idx },
+        itemValue: { type: String, default: 'code' },
         openOnFocus: { type: Boolean, default: true },
     })
 
@@ -371,7 +372,7 @@ function onDocumentClick(e) {
     }
 
     const valueInput = ()=>{
-        return selected.value.code?? '';
+        return selected.value ? selected.value[props.itemValue] ?? '' : '';
     }
 
      /**
@@ -400,6 +401,7 @@ function onDocumentClick(e) {
         //'ruleText':props.ruleText,
         'minChar':props.minChar,
         'maxChar':props.maxChar,
+        'itemValue':props.itemValue,
     }
 
     // expose the checkValidateError to parent component

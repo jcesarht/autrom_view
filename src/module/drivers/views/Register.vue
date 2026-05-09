@@ -75,28 +75,14 @@
                     />
                 </div>
                 <div>
-                     <UIInputText 
-                        name="dri_country"
-                        placeholder="País"
-                        field="País"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="dri_state"
-                        placeholder="Estado / Departamento"
-                        field="Estado / Departamento"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="dri_city"
-                        placeholder="Ciudad"
-                        field="Ciudad"
+                    <UILocationPicker
+                        countryField="dri_country"
+                        stateField="dri_state"
+                        cityField="dri_city"
+                        countryLabel="País"
+                        stateLabel="Estado / Departamento"
+                        cityLabel="Ciudad"
+                        countryValueType="name"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -112,6 +98,7 @@
     import {ref} from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
     import UIInputDate from '@/components/UIComponents/UIInputDate.vue';
+    import UILocationPicker from '@/components/UIComponents/UILocationPicker.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
     import baseInfoSign from '@/components/base/baseInfoSign.vue';
     import { useOverlay } from '@/stores/useOverlay';
@@ -166,7 +153,11 @@
         const data = []
         if (!response.error) {
             inputs.value.some((input)=>{
-                data[input.attribute.name] = input.valueInput()
+                if (input.attribute.isLocationPicker) {
+                    Object.assign(data, input.valueInput())
+                } else {
+                    data[input.attribute.name] = input.valueInput()
+                }
             })
             response.data = data;
         }

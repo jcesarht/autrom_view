@@ -1,6 +1,7 @@
 <script setup>
     import {ref} from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
+    import UILocationPicker from '@/components/UIComponents/UILocationPicker.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
     import baseInfoSign from '@/components/base/baseInfoSign.vue';
     import { useOverlay } from '@/stores/useOverlay';
@@ -68,7 +69,11 @@
         const data = []
         if (!response.error) {
             inputs.value.some((input)=>{
-                data[input.attribute.name] = input.valueInput()
+                if (input.attribute.isLocationPicker) {
+                    Object.assign(data, input.valueInput())
+                } else {
+                    data[input.attribute.name] = input.valueInput()
+                }
             })
             response.data = data;
         }
@@ -166,32 +171,16 @@
                     />
                 </div>
                 <div>
-                     <UIInputText 
-                        name="own_country"
-                        placeholder="Own country"
-                        field="Own country"
+                    <UILocationPicker
+                        countryField="own_country"
+                        stateField="own_state"
+                        cityField="own_city"
+                        countryLabel="Own country"
+                        stateLabel="Own state"
+                        cityLabel="Own city"
+                        countryValueType="name"
+                        :modelValue="{ own_country: props.dataForUpdate.own_country, own_state: props.dataForUpdate.own_state, own_city: props.dataForUpdate.own_city }"
                         :ref="element => inputs.push(element)"
-                        :value="props.dataForUpdate.own_country"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="own_state"
-                        placeholder="Own state"
-                        field="Own state"
-                        :ref="element => inputs.push(element)"
-                        :value="props.dataForUpdate.own_state"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="own_city"
-                        placeholder="Own city"
-                        field="Own city"
-                        :ref="element => inputs.push(element)"
-                        :value="props.dataForUpdate.own_city"
                         required="false"
                     />
                 </div>

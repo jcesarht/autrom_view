@@ -1,6 +1,6 @@
 import {companiesService } from "../services/companiesService"; 
 import { useUserLoginStore } from "../../userLogin/stores/useUserLoginStore";
-import { useActionsTableRecord } from "@/composables/useHelper";
+import { useActionsTableRecord, formatDate } from "@/composables/useHelper";
 import { ref, reactive } from "vue";
 
 export function useCompanies(){
@@ -55,6 +55,11 @@ export function useCompanies(){
             for (let i = 0; i < result_data.length; i++) {
                 if (result_data[i].com_id) {
                     result_data[i].actions_buttons = useActionsTableRecord(result_data[i].com_id);
+                }
+
+                // Format dates
+                for (const key in result_data[i]) {
+                    result_data[i][key] = formatDate(result_data[i][key]);
                 }
 
                 dataForUpdate[result_data[i].com_id] = result_data[i];

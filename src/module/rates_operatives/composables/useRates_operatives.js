@@ -1,6 +1,6 @@
 import {rates_operativesService } from "../services/rates_operativesService"; 
 import { useUserLoginStore } from "../../userLogin/stores/useUserLoginStore";
-import { useActionsTableRecord } from "@/composables/useHelper";
+import { useActionsTableRecord, formatDate } from "@/composables/useHelper";
 import { ref, reactive } from "vue";
 
 export function useRates_opeRatives(){
@@ -64,23 +64,10 @@ export function useRates_opeRatives(){
                 "Fecha de Creación",
                 "Fecha de Actualización"
             ]
-            const dateColumns = ["raop_create_at", "raop_update_at"]
             let index = 0
             for (const column in result_data[0]) {
                 if (column === "sub" || column === "com") continue;
-                if (dateColumns.includes(column)) {
-                    columns.push({
-                        data: column,
-                        title: title[index],
-                        render: (data) => {
-                            if (!data) return '';
-                            // Remove timezone info — keep only "YYYY-MM-DD HH:MM:SS"
-                            return data.replace('T', ' ').substring(0, 19);
-                        }
-                    })
-                } else {
-                    columns.push( {data: column, title: title[index]} )
-                }
+                columns.push( {data: column, title: title[index]} )
                 index++
             }
             columns.push({data: "actions_buttons", title: "Actions"})
@@ -89,6 +76,11 @@ export function useRates_opeRatives(){
             for (let i = 0; i < result_data.length; i++) {
                 if (result_data[i].raop_id) {
                     result_data[i].actions_buttons = useActionsTableRecord(result_data[i].raop_id);
+                }
+
+                // Format dates
+                for (const key in result_data[i]) {
+                    result_data[i][key] = formatDate(result_data[i][key]);
                 }
 
                 dataForUpdate[result_data[i].raop_id] = result_data[i];

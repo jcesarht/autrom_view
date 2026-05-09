@@ -1,6 +1,6 @@
 import {subsidiariesService } from "../services/subsidiariesService"; 
 import { useUserLoginStore } from "../../userLogin/stores/useUserLoginStore";
-import { useActionsTableRecord } from "@/composables/useHelper";
+import { useActionsTableRecord, formatDate } from "@/composables/useHelper";
 import { ref, reactive } from "vue";
 
 export function useSubSidiarieS(){
@@ -55,6 +55,11 @@ export function useSubSidiarieS(){
             for (let i = 0; i < result_data.length; i++) {
                 if (result_data[i].sub_id) {
                     result_data[i].actions_buttons = useActionsTableRecord(result_data[i].sub_id);
+                }
+
+                // Format dates
+                for (const key in result_data[i]) {
+                    result_data[i][key] = formatDate(result_data[i][key]);
                 }
 
                 dataForUpdate[result_data[i].sub_id] = result_data[i];

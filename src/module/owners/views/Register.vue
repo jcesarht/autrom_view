@@ -57,28 +57,14 @@
                     />
                 </div>
                 <div>
-                     <UIInputText 
-                        name="own_country"
-                        placeholder="Own country"
-                        field="Own country"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="own_state"
-                        placeholder="Own state"
-                        field="Own state"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="own_city"
-                        placeholder="Own city"
-                        field="Own city"
+                    <UILocationPicker
+                        countryField="own_country"
+                        stateField="own_state"
+                        cityField="own_city"
+                        countryLabel="Own country"
+                        stateLabel="Own state"
+                        cityLabel="Own city"
+                        countryValueType="name"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -93,6 +79,7 @@
 <script setup>
     import {ref} from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
+    import UILocationPicker from '@/components/UIComponents/UILocationPicker.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
     import baseInfoSign from '@/components/base/baseInfoSign.vue';
     import { useOverlay } from '@/stores/useOverlay';
@@ -147,7 +134,11 @@
         const data = []
         if (!response.error) {
             inputs.value.some((input)=>{
-                data[input.attribute.name] = input.valueInput()
+                if (input.attribute.isLocationPicker) {
+                    Object.assign(data, input.valueInput())
+                } else {
+                    data[input.attribute.name] = input.valueInput()
+                }
             })
             response.data = data;
         }

@@ -1,6 +1,6 @@
 import {vehiclesService } from "../services/vehiclesService"; 
 import { useUserLoginStore } from "../../userLogin/stores/useUserLoginStore";
-import { useActionsTableRecord } from "@/composables/useHelper";
+import { useActionsTableRecord, formatDate } from "@/composables/useHelper";
 import { ref, reactive } from "vue";
 
 export function useVehicles(){
@@ -52,6 +52,11 @@ export function useVehicles(){
             for (let i = 0; i < result_data.length; i++) {
                 if (result_data[i].veh_id) {
                     result_data[i].actions_buttons = useActionsTableRecord(result_data[i].veh_id);
+                }
+
+                // Format dates
+                for (const key in result_data[i]) {
+                    result_data[i][key] = formatDate(result_data[i][key]);
                 }
 
                 dataForUpdate[result_data[i].veh_id] = result_data[i];
