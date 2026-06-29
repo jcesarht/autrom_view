@@ -78,9 +78,13 @@ export function useRates_opeRatives(){
                     result_data[i].actions_buttons = useActionsTableRecord(result_data[i].raop_id);
                 }
 
-                // Format dates
+                // Format dates and boolean
                 for (const key in result_data[i]) {
-                    result_data[i][key] = formatDate(result_data[i][key]);
+                    if (key === 'raop_before_date_deafult') {
+                        result_data[i][key] = (result_data[i][key] == 1) ? 'si' : 'no';
+                    } else {
+                        result_data[i][key] = formatDate(result_data[i][key]);
+                    }
                 }
 
                 dataForUpdate[result_data[i].raop_id] = result_data[i];

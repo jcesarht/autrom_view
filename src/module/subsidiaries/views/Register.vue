@@ -74,27 +74,7 @@
                         required="false"
                     />
                 </div>
-                <div>
-                    <UIAutocomplete
-                        name="com"
-                        v-model="selected_company"
-                        :items="autocomplete_companies"
-                        :getLabel="c => c.name"
-                        :itemKey="c => c.code"
-                        required="true"
-                        field ="Compañia"
-                        placeholder ="Compañia"
-                        @select="onSelect"
-                        :ref="element => inputs.push(element)"
-                    >
-                        <template #item="{ item }">
-                            <div class="flex justify-between w-full">
-                                <span>{{ item.name }}</span>
-                                <small class="text-gray-400">{{ item.code }}</small>
-                            </div>
-                        </template>
-                    </UIAutocomplete>
-                </div>
+
                 <div class="w-30">
                     <UIButton textButton="Save" />
                 </div>

@@ -1,11 +1,14 @@
 <script setup>
-    import {ref} from 'vue';
+    import {ref, onMounted} from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
+    import UIAutocomplete from '@/components/UIComponents/UIAutocomplete.vue';
     import UILocationPicker from '@/components/UIComponents/UILocationPicker.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
     import baseInfoSign from '@/components/base/baseInfoSign.vue';
     import { useOverlay } from '@/stores/useOverlay';
     import { useOwners } from '../composables/useOwners';
+    import { subsidiariesService } from '@/module/subsidiaries/services/subsidiariesService';
+    import { useUserLoginStore } from '@/module/userLogin/stores/useUserLoginStore';
     
     //initialize  reactive variable
     const inputs = ref([])
@@ -14,6 +17,14 @@
     const infoMessage = ref(null)
     const disableButton = ref(false)
     const { update, error, message } = useOwners()
+    const autocomplete_branches = ref([])
+    onMounted(async () => {
+        const { token } = useUserLoginStore()
+        const res = await subsidiariesService.query(undefined, { token })
+        if (!res.error && res.result.data) {
+            autocomplete_branches.value = res.result.data
+        }
+    })
     //props
     const props = defineProps({
         id: {
@@ -184,46 +195,27 @@
                         required="false"
                     />
                 </div>
-                <div>
-                     <UIInputText 
+                <div v-if="autocomplete_branches.length > 1">
+                     <UIAutocomplete 
                         name="sub"
-                        placeholder="Sub"
-                        field="Sub"
+                        placeholder="Sucursal"
+                        field="Sucursal"
                         :ref="element => inputs.push(element)"
-                        :value="props.dataForUpdate.sub"
-                        required="false"
-                    />
+                        :modelValue="props.dataForUpdate.sub"
+                        required="true"
+                        :items="autocomplete_branches"
+                        :getLabel="s => s.sub_name"
+                        itemValue="sub_id"
+                        :itemKey="s => s.sub_id"
+                    >
+                        <template #item="{ item }">
+                            <div class="flex justify-between w-full">
+                                <span>{{ item.sub_name }}</span>
+                            </div>
+                        </template>
+                    </UIAutocomplete>
                 </div>
-                <div>
-                     <UIInputText 
-                        name="com"
-                        placeholder="Com"
-                        field="Com"
-                        :ref="element => inputs.push(element)"
-                        :value="props.dataForUpdate.com"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="own_create_at"
-                        placeholder="Own create at"
-                        field="Own create at"
-                        :ref="element => inputs.push(element)"
-                        :value="props.dataForUpdate.own_create_at"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="own_update_at"
-                        placeholder="Own update at"
-                        field="Own update at"
-                        :ref="element => inputs.push(element)"
-                        :value="props.dataForUpdate.own_update_at"
-                        required="false"
-                    />
-                </div>
+
                 <div class="w-30">
                     <UIButton textButton="Update" />
                 </div>

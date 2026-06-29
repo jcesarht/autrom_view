@@ -1,5 +1,6 @@
 import {shift_settlementService } from "../services/shift_settlementService"; 
 import { useUserLoginStore } from "../../userLogin/stores/useUserLoginStore";
+import { subsidiariesService } from "@/module/subsidiaries/services/subsidiariesService";
 import { useActionsTableRecord, formatDate } from "@/composables/useHelper";
 import { ref, reactive } from "vue";
 
@@ -41,10 +42,27 @@ export function useShift_Settlement(){
             if (res.error){
                 throw Error(res.result.message)
             }
+            const sub_res = await subsidiariesService.query(undefined, {"token": token});
+            let sub_map = {};
+            let sub_count = 0;
+            if (!sub_res.error && sub_res.result.data) {
+                sub_count = sub_res.result.data.length;
+                sub_res.result.data.forEach(s => {
+                    sub_map[s.sub_id] = s.sub_name;
+                });
+            }
+
             const result_data = res.result.data
             const columns = []
             for (const column in result_data[0]) {
-                columns.push( {data: column,title: (column.charAt(0).toUpperCase() + column.slice(1)).replace("_"," ")} )
+                if (column === 'com') continue;
+                if (column === 'sub') {
+                    if (sub_count <= 1) continue;
+                    columns.push( {data: column,title: 'Sucursal'} )
+                    continue;
+                }
+                let colTitle = (column.charAt(0).toUpperCase() + column.slice(1)).replace("_"," ");
+                columns.push( {data: column,title: colTitle} )
             }
             columns.push({data: "actions_buttons", title: "Actions"})
             //add actions buttons to each row
@@ -54,9 +72,13 @@ export function useShift_Settlement(){
                     result_data[i].actions_buttons = useActionsTableRecord(result_data[i].shiset_id);
                 }
 
-                // Format dates
+                // Format dates and sub
                 for (const key in result_data[i]) {
-                    result_data[i][key] = formatDate(result_data[i][key]);
+                    if (key === 'sub') {
+                        result_data[i][key] = sub_map[result_data[i][key]] || result_data[i][key];
+                    } else {
+                        result_data[i][key] = formatDate(result_data[i][key]);
+                    }
                 }
 
                 dataForUpdate[result_data[i].shiset_id] = result_data[i];

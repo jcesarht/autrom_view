@@ -95,7 +95,7 @@
     </div>
 </template>
 <script setup>
-    import {ref} from 'vue';
+    import {ref, onMounted} from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
     import UIInputDate from '@/components/UIComponents/UIInputDate.vue';
     import UILocationPicker from '@/components/UIComponents/UILocationPicker.vue';
@@ -103,6 +103,8 @@
     import baseInfoSign from '@/components/base/baseInfoSign.vue';
     import { useOverlay } from '@/stores/useOverlay';
     import { useDrivers } from '../composables/useDrivers';
+    import { subsidiariesService } from '@/module/subsidiaries/services/subsidiariesService';
+    import { useUserLoginStore } from '@/module/userLogin/stores/useUserLoginStore';
     
     //initialize  reactive variable
     const inputs = ref([])
@@ -111,6 +113,15 @@
     const infoMessage = ref(null)
     const disableButton = ref(false)
     const { save, error, message } = useDrivers()
+    
+    const autocomplete_branches = ref([])
+    onMounted(async () => {
+        const { token } = useUserLoginStore()
+        const res = await subsidiariesService.query(undefined, { token })
+        if (!res.error && res.result.data) {
+            autocomplete_branches.value = res.result.data
+        }
+    })
     
     //overlay function
     const overlay = useOverlay()
@@ -151,6 +162,7 @@
 
         response.error = inputs.value.some(input => input.checkValidateError())
         const data = []
+        debugger
         if (!response.error) {
             inputs.value.some((input)=>{
                 if (input.attribute.isLocationPicker) {
@@ -159,6 +171,13 @@
                     data[input.attribute.name] = input.valueInput()
                 }
             })
+            
+            const userData = JSON.parse(localStorage.getItem('userLogin'))
+            if (userData) {
+                if (!data['sub']) data['sub'] = userData.sub_id
+                data['com'] = userData.com_id
+            }
+
             response.data = data;
         }
         
