@@ -56,6 +56,9 @@ export function useShift_Settlement(){
             const columns = []
             for (const column in result_data[0]) {
                 if (column === 'com') continue;
+                if (column === 'shiset_id') continue;
+                if (column === 'shiset_status') continue;
+                if (column === 'shiset_type') continue;
                 if (column === 'sub') {
                     if (sub_count <= 1) continue;
                     columns.push( {data: column,title: 'Sucursal'} )
