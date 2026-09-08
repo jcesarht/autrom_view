@@ -1,7 +1,8 @@
 <script setup>
-    import {ref} from 'vue';
+    import { ref, onMounted } from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
     import UILocationPicker from '@/components/UIComponents/UILocationPicker.vue';
+    import UICheckbox from '@/components/UIComponents/UICheckbox.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
     import baseInfoSign from '@/components/base/baseInfoSign.vue';
     import { useOverlay } from '@/stores/useOverlay';
@@ -10,31 +11,19 @@
     import { useUserLoginStore } from '@/module/userLogin/stores/useUserLoginStore';
     import { ownersService } from '@/module/owners/services/ownersService';
     import { subsidiariesService } from '@/module/subsidiaries/services/subsidiariesService';
-    import { onMounted } from 'vue';
     
-    //initialize  reactive variable
+    //initialize reactive variable
     const inputs = ref([])
     const showSign = ref(false)
     const typeInfo = ref("error")
     const infoMessage = ref(null)
     const disableButton = ref(false)
+    const isUpdated = ref(false)
+    const selectedOwner = ref(null)
     const { update, error, message } = useVehicles()
     
     const autocomplete_branches = ref([])
-    onMounted(async () => {
-        const { token } = useUserLoginStore()
-        const res = await subsidiariesService.query(undefined, { token })
-        if (!res.error && res.result.data) {
-            autocomplete_branches.value = res.result.data
-        }
-    })
-    
-    const fetchOwners = async (q) => {
-        const { token } = useUserLoginStore()
-        const res = await ownersService.query({ search: q }, { token })
-        if (res.error) return []
-        return res.result.data
-    }
+
     //props
     const props = defineProps({
         id: {
@@ -50,9 +39,35 @@
             default: () => []
         }
     });
+
+    onMounted(async () => {
+        const { token } = useUserLoginStore()
+        const res = await subsidiariesService.query(undefined, { token })
+        if (!res.error && res.result.data) {
+            autocomplete_branches.value = res.result.data
+        }
+
+        if (props.dataForUpdate && props.dataForUpdate.own) {
+            const ownerId = typeof props.dataForUpdate.own === 'object' ? props.dataForUpdate.own.own_id : props.dataForUpdate.own;
+            const ownRes = await ownersService.query(ownerId, { token })
+            if (!ownRes.error && ownRes.result.data) {
+                const ownerObj = Array.isArray(ownRes.result.data) ? ownRes.result.data[0] : ownRes.result.data;
+                if (ownerObj) {
+                    selectedOwner.value = ownerObj;
+                }
+            }
+        }
+    })
+    
+    const fetchOwners = async (q) => {
+        const { token } = useUserLoginStore()
+        const res = await ownersService.query({ search: q }, { token })
+        if (res.error) return []
+        return res.result.data
+    }
+
     //overlay function
     const overlay = useOverlay()
-    //composable functions
     const { showOverlay, hiddenOverlay } = overlay
 
     //event save function
@@ -65,9 +80,10 @@
             const validate = validateInput()
             if (!validate.error){
                 typeInfo.value = "alert"
-                await update(props.id,validate.data);
+                await update(props.id, validate.data);
                 if (!error.value){
                     typeInfo.value = "success"
+                    isUpdated.value = true
                 }
                 showSign.value = true
                 infoMessage.value = message
@@ -87,7 +103,7 @@
         };
 
         response.error = inputs.value.some(input => input.checkValidateError())
-        const data = []
+        const data = {}
         if (!response.error) {
             inputs.value.some((input)=>{
                 if (input.attribute.isLocationPicker) {
@@ -111,7 +127,7 @@
     }
 
     const showUpdateForm = ()=>{
-        emit('showUpdateForm', false)
+        emit('showUpdateForm', isUpdated.value)
     }
     const emit = defineEmits(['showUpdateForm'])
 
@@ -126,16 +142,16 @@
         <form novalidate @submit.prevent="updateEventButton()">
             <div class="w-12/12">
                 <div class="w-30 mb-2">
-                    <UIButton textButton="Go Back" @click="showUpdateForm()" />
+                    <UIButton textButton="Atrás" @click="showUpdateForm()" />
                 </div>
                 
                 <div>
                      <UIAutocomplete 
                         name="own"
-                        placeholder="Propietario"
-                        field="Own"
+                        placeholder="Buscar propietario..."
+                        field="Propietario"
                         :ref="element => inputs.push(element)"
-                        :modelValue="props.dataForUpdate.own"
+                        :modelValue="selectedOwner || props.dataForUpdate.own"
                         required="true"
                         :fetchSuggestions="fetchOwners"
                         :getLabel="o => `${o.own_first_name} ${o.own_last_name} - ${o.own_dni}`"
@@ -153,8 +169,8 @@
                 <div>
                      <UIInputText 
                         name="veh_license_plate"
-                        placeholder="Veh license plate"
-                        field="Veh license plate"
+                        placeholder="Placa del vehículo"
+                        field="Placa del vehículo"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.veh_license_plate"
                         required="true"
@@ -163,8 +179,8 @@
                 <div>
                      <UIInputText 
                         name="veh_initial_milealge"
-                        placeholder="Veh initial milealge"
-                        field="Veh initial milealge"
+                        placeholder="Kilometraje inicial"
+                        field="Kilometraje inicial"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.veh_initial_milealge"
                         required="false"
@@ -173,8 +189,8 @@
                 <div>
                      <UIInputText 
                         name="veh_brand"
-                        placeholder="Veh brand"
-                        field="Veh brand"
+                        placeholder="Marca"
+                        field="Marca"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.veh_brand"
                         required="false"
@@ -183,8 +199,8 @@
                 <div>
                      <UIInputText 
                         name="veh_model"
-                        placeholder="Veh model"
-                        field="Veh model"
+                        placeholder="Modelo"
+                        field="Modelo"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.veh_model"
                         required="false"
@@ -193,8 +209,8 @@
                 <div>
                      <UIInputText 
                         name="veh_chassis"
-                        placeholder="Veh chassis"
-                        field="Veh chassis"
+                        placeholder="Chasis"
+                        field="Chasis"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.veh_chassis"
                         required="false"
@@ -203,8 +219,8 @@
                 <div>
                      <UIInputText 
                         name="veh_engine"
-                        placeholder="Veh engine"
-                        field="Veh engine"
+                        placeholder="Motor"
+                        field="Motor"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.veh_engine"
                         required="false"
@@ -213,18 +229,19 @@
                 <div>
                      <UIInputText 
                         name="veh_show_owner_report_from"
-                        placeholder="Veh show owner report from"
-                        field="Veh show owner report from"
+                        placeholder="Mostrar reporte de propietario desde"
+                        field="Mostrar reporte de propietario desde"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.veh_show_owner_report_from"
                         required="false"
                     />
                 </div>
                 <div>
-                     <UIInputText 
+                     <UICheckbox 
                         name="veh_tracker"
-                        placeholder="Veh tracker"
-                        field="Veh tracker"
+                        field="Rastreador de vehículo"
+                        :checkedValue="1"
+                        :uncheckedValue="0"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.veh_tracker"
                         required="false"
@@ -235,9 +252,9 @@
                         countryField="veh_country"
                         stateField="veh_state"
                         cityField="veh_city"
-                        countryLabel="Veh country"
-                        stateLabel="Veh state"
-                        cityLabel="Veh city"
+                        countryLabel="País del vehículo"
+                        stateLabel="Estado / Departamento del vehículo"
+                        cityLabel="Ciudad del vehículo"
                         countryValueType="name"
                         :modelValue="{ veh_country: props.dataForUpdate.veh_country, veh_state: props.dataForUpdate.veh_state, veh_city: props.dataForUpdate.veh_city }"
                         :ref="element => inputs.push(element)"
@@ -265,9 +282,8 @@
                     </UIAutocomplete>
                 </div>
 
-                
                 <div class="w-30">
-                    <UIButton textButton="Update" />
+                    <UIButton textButton="Actualizar" />
                 </div>
             </div>
         </form>

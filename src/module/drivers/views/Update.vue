@@ -1,6 +1,7 @@
 <script setup>
-    import {ref, onMounted} from 'vue';
+    import { ref, onMounted } from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
+    import UIQuality from '@/components/UIComponents/UIQuality.vue';
     import UIAutocomplete from '@/components/UIComponents/UIAutocomplete.vue';
     import UILocationPicker from '@/components/UIComponents/UILocationPicker.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
@@ -10,14 +11,16 @@
     import { subsidiariesService } from '@/module/subsidiaries/services/subsidiariesService';
     import { useUserLoginStore } from '@/module/userLogin/stores/useUserLoginStore';
     
-    //initialize  reactive variable
+    //initialize reactive variable
     const inputs = ref([])
     const showSign = ref(false)
     const typeInfo = ref("error")
     const infoMessage = ref(null)
     const disableButton = ref(false)
+    const isUpdated = ref(false)
     const { update, error, message } = useDrivers()
     const autocomplete_branches = ref([])
+
     onMounted(async () => {
         const { token } = useUserLoginStore()
         const res = await subsidiariesService.query(undefined, { token })
@@ -42,7 +45,6 @@
     });
     //overlay function
     const overlay = useOverlay()
-    //composable functions
     const { showOverlay, hiddenOverlay } = overlay
 
     //event save function
@@ -55,9 +57,10 @@
             const validate = validateInput()
             if (!validate.error){
                 typeInfo.value = "alert"
-                await update(props.id,validate.data);
+                await update(props.id, validate.data);
                 if (!error.value){
                     typeInfo.value = "success"
+                    isUpdated.value = true
                 }
                 showSign.value = true
                 infoMessage.value = message
@@ -77,7 +80,7 @@
         };
 
         response.error = inputs.value.some(input => input.checkValidateError())
-        const data = []
+        const data = {}
         if (!response.error) {
             inputs.value.some((input)=>{
                 if (input.attribute.isLocationPicker) {
@@ -86,6 +89,13 @@
                     data[input.attribute.name] = input.valueInput()
                 }
             })
+
+            const userData = JSON.parse(localStorage.getItem('userLogin'))
+            if (userData) {
+                if (!data['sub']) data['sub'] = userData.sub_id
+                data['com'] = userData.com_id
+            }
+
             response.data = data;
         }
         
@@ -93,7 +103,7 @@
     }
 
     const showUpdateForm = ()=>{
-        emit('showUpdateForm', false)
+        emit('showUpdateForm', isUpdated.value)
     }
     const emit = defineEmits(['showUpdateForm'])
 
@@ -108,14 +118,14 @@
         <form novalidate @submit.prevent="updateEventButton()">
             <div class="w-12/12">
                 <div class="w-30 mb-2">
-                    <UIButton textButton="Go Back" @click="showUpdateForm()" />
+                    <UIButton textButton="Atrás" @click="showUpdateForm()" />
                 </div>
                 
                 <div>
                      <UIInputText 
                         name="dri_dni"
-                        placeholder="Dri dni"
-                        field="Dri dni"
+                        placeholder="DNI / Cédula"
+                        field="DNI / Cédula"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.dri_dni"
                         required="true"
@@ -124,8 +134,8 @@
                 <div>
                      <UIInputText 
                         name="dri_firts_name"
-                        placeholder="Dri firts name"
-                        field="Dri firts name"
+                        placeholder="Nombres"
+                        field="Nombres"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.dri_firts_name"
                         required="true"
@@ -134,18 +144,20 @@
                 <div>
                      <UIInputText 
                         name="dri_last_name"
-                        placeholder="Dri last name"
-                        field="Dri last name"
+                        placeholder="Apellidos"
+                        field="Apellidos"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.dri_last_name"
                         required="false"
                     />
                 </div>
                 <div>
-                     <UIInputText 
+                     <UIQuality 
                         name="dri_qualify"
-                        placeholder="Dri qualify"
-                        field="Dri qualify"
+                        field="Calificación del conductor"
+                        :maxStars="5"
+                        activeColor="bg-blue-500"
+                        inactiveColor="bg-gray-200"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.dri_qualify"
                         required="false"
@@ -154,8 +166,8 @@
                 <div>
                      <UIInputText 
                         name="dri_phone"
-                        placeholder="Dri phone"
-                        field="Dri phone"
+                        placeholder="Teléfono"
+                        field="Teléfono"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.dri_phone"
                         required="false"
@@ -164,8 +176,8 @@
                 <div>
                      <UIInputText 
                         name="dri_birthday"
-                        placeholder="Dri birthday"
-                        field="Dri birthday"
+                        placeholder="Fecha de nacimiento"
+                        field="Fecha de nacimiento"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.dri_birthday"
                         required="false"
@@ -174,8 +186,8 @@
                 <div>
                      <UIInputText 
                         name="dri_email"
-                        placeholder="Dri email"
-                        field="Dri email"
+                        placeholder="Correo electrónico"
+                        field="Correo electrónico"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.dri_email"
                         required="false"
@@ -186,9 +198,9 @@
                         countryField="dri_country"
                         stateField="dri_state"
                         cityField="dri_city"
-                        countryLabel="Dri country"
-                        stateLabel="Dri state"
-                        cityLabel="Dri city"
+                        countryLabel="País"
+                        stateLabel="Estado / Departamento"
+                        cityLabel="Ciudad"
                         countryValueType="name"
                         :modelValue="{ dri_country: props.dataForUpdate.dri_country, dri_state: props.dataForUpdate.dri_state, dri_city: props.dataForUpdate.dri_city }"
                         :ref="element => inputs.push(element)"
@@ -216,7 +228,7 @@
                     </UIAutocomplete>
                 </div>
                 <div class="w-30">
-                    <UIButton textButton="Update" />
+                    <UIButton textButton="Actualizar" />
                 </div>
             </div>
         </form>

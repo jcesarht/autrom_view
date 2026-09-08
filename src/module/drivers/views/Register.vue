@@ -8,14 +8,14 @@
         <form novalidate @submit.prevent="saveEventButton()">
             <div class="w-12/12">
                 <div class="w-30 mb-2">
-                    <UIButton textButton="Save" />
+                    <UIButton textButton="Guardar" />
                 </div>
                 
                 <div>
                      <UIInputText 
                         name="dri_dni"
-                        placeholder="DNI/Identification"
-                        field="DNI/Identification"
+                        placeholder="DNI / Cédula"
+                        field="DNI / Cédula"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -38,20 +38,12 @@
                         required="false"
                     />
                 </div>
-                <div>
-                     <UIInputText 
-                        name="dri_qualify"
-                        placeholder="Calificación"
-                        field="Calificación"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
+
                 <div>
                      <UIInputText 
                         name="dri_phone"
-                        placeholder="Telefóno"
-                        field="Telefóno"
+                        placeholder="Teléfono"
+                        field="Teléfono"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -59,8 +51,8 @@
                 <div>
                      <UIInputDate 
                         name="dri_birthday"
-                        placeholder="Cumpleaños"
-                        field="Cumpleaños"
+                        placeholder="Fecha de nacimiento"
+                        field="Fecha de nacimiento"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -68,8 +60,8 @@
                 <div>
                      <UIInputText 
                         name="dri_email"
-                        placeholder="Email"
-                        field="Email"
+                        placeholder="Correo electrónico"
+                        field="Correo electrónico"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -87,8 +79,27 @@
                         required="false"
                     />
                 </div>
+                <div v-if="autocomplete_branches.length > 1">
+                     <UIAutocomplete 
+                        name="sub"
+                        placeholder="Sucursal"
+                        field="Sucursal"
+                        :ref="element => inputs.push(element)"
+                        required="true"
+                        :items="autocomplete_branches"
+                        :getLabel="s => s.sub_name"
+                        itemValue="sub_id"
+                        :itemKey="s => s.sub_id"
+                    >
+                        <template #item="{ item }">
+                            <div class="flex justify-between w-full">
+                                <span>{{ item.sub_name }}</span>
+                            </div>
+                        </template>
+                    </UIAutocomplete>
+                </div>
                 <div class="w-30">
-                    <UIButton textButton="Save" />
+                    <UIButton textButton="Guardar" />
                 </div>
             </div>
         </form>
@@ -99,6 +110,7 @@
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
     import UIInputDate from '@/components/UIComponents/UIInputDate.vue';
     import UILocationPicker from '@/components/UIComponents/UILocationPicker.vue';
+    import UIAutocomplete from '@/components/UIComponents/UIAutocomplete.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
     import baseInfoSign from '@/components/base/baseInfoSign.vue';
     import { useOverlay } from '@/stores/useOverlay';
@@ -106,7 +118,7 @@
     import { subsidiariesService } from '@/module/subsidiaries/services/subsidiariesService';
     import { useUserLoginStore } from '@/module/userLogin/stores/useUserLoginStore';
     
-    //initialize  reactive variable
+    //initialize reactive variable
     const inputs = ref([])
     const showSign = ref(false)
     const typeInfo = ref("error")
@@ -126,7 +138,6 @@
     //overlay function
     const overlay = useOverlay()
     const { showOverlay, hiddenOverlay } = overlay
-    //composable functions
 
     //event save function
     const saveEventButton = async()=>{
@@ -161,8 +172,7 @@
         };
 
         response.error = inputs.value.some(input => input.checkValidateError())
-        const data = []
-        debugger
+        const data = {}
         if (!response.error) {
             inputs.value.some((input)=>{
                 if (input.attribute.isLocationPicker) {

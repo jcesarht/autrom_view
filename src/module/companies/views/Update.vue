@@ -1,5 +1,5 @@
 <script setup>
-    import {ref} from 'vue';
+    import { ref } from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
     import UIInputDate from '@/components/UIComponents/UIInputDate.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
@@ -7,12 +7,13 @@
     import { useOverlay } from '@/stores/useOverlay';
     import { useCompanies } from '../composables/useCompanies';
     
-    //initialize  reactive variable
+    //initialize reactive variable
     const inputs = ref([])
     const showSign = ref(false)
     const typeInfo = ref("error")
     const infoMessage = ref(null)
     const disableButton = ref(false)
+    const isUpdated = ref(false)
     const { update, error, message } = useCompanies()
     //props
     const props = defineProps({
@@ -31,7 +32,6 @@
     });
     //overlay function
     const overlay = useOverlay()
-    //composable functions
     const { showOverlay, hiddenOverlay } = overlay
 
     //event save function
@@ -44,9 +44,10 @@
             const validate = validateInput()
             if (!validate.error){
                 typeInfo.value = "alert"
-                await update(props.id,validate.data);
+                await update(props.id, validate.data);
                 if (!error.value){
                     typeInfo.value = "success"
+                    isUpdated.value = true
                 }
                 showSign.value = true
                 infoMessage.value = message
@@ -66,7 +67,7 @@
         };
 
         response.error = inputs.value.some(input => input.checkValidateError())
-        const data = []
+        const data = {}
         if (!response.error) {
             inputs.value.some((input)=>{
                 data[input.attribute.name] = input.valueInput()
@@ -78,7 +79,7 @@
     }
 
     const showUpdateForm = ()=>{
-        emit('showUpdateForm', false)
+        emit('showUpdateForm', isUpdated.value)
     }
     const emit = defineEmits(['showUpdateForm'])
 
@@ -93,14 +94,14 @@
         <form novalidate @submit.prevent="updateEventButton()">
             <div class="w-12/12">
                 <div class="w-30 mb-2">
-                    <UIButton textButton="Go Back" @click="showUpdateForm()" />
+                    <UIButton textButton="Atrás" @click="showUpdateForm()" />
                 </div>
                 
                 <div>
                      <UIInputText 
                         name="com_name"
-                        placeholder="Compañia"
-                        field="Compañia"
+                        placeholder="Nombre de la empresa"
+                        field="Nombre de la empresa"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com_name"
                         required="true"
@@ -129,18 +130,18 @@
                 <div>
                      <UIInputText 
                         name="com_total_number_of_car"
-                        placeholder="Numbero de Carros"
-                        field="Numbero de Carros"
+                        placeholder="Número total de vehículos"
+                        field="Número total de vehículos"
                         :ref="element => inputs.push(element)"
-                        :value="props.dataForUpdate.com_total_number_of_car.toString()"
+                        :value="props.dataForUpdate.com_total_number_of_car ? props.dataForUpdate.com_total_number_of_car.toString() : ''"
                         required="true"
                     />
                 </div>
                 <div>
                      <UIInputText 
                         name="com_base_price"
-                        placeholder="Precio Base"
-                        field="Precio Base"
+                        placeholder="Precio base"
+                        field="Precio base"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com_base_price"
                         required="true"
@@ -149,8 +150,8 @@
                 <div>
                      <UIInputText 
                         name="com_price_sales"
-                        placeholder="Precio"
-                        field="Precio"
+                        placeholder="Precio de venta"
+                        field="Precio de venta"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com_price_sales"
                         required="true"
@@ -169,8 +170,8 @@
                 <div>
                      <UIInputText 
                         name="com_taxes"
-                        placeholder="Impuesto"
-                        field="Impuesto"
+                        placeholder="Impuestos"
+                        field="Impuestos"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com_taxes"
                         required="false"
@@ -179,8 +180,8 @@
                 <div>
                      <UIInputText 
                         name="com_withholding_tax"
-                        placeholder="Retenciones"
-                        field="Retenciones"
+                        placeholder="Retención en la fuente"
+                        field="Retención en la fuente"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com_withholding_tax"
                         required="false"
@@ -190,15 +191,15 @@
                     <UIInputDate
                         name="com_expiration_date"
                         id="com_expiration_date_updated"
-                        placeholder="Fecha de Expiración"
-                        field="Fecha de Expiración"
+                        placeholder="Fecha de expiración"
+                        field="Fecha de expiración"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.com_expiration_date"
                         required="true"
                     />
                 </div>
                 <div class="w-30">
-                    <UIButton textButton="Update" />
+                    <UIButton textButton="Actualizar" />
                 </div>
             </div>
         </form>

@@ -236,9 +236,19 @@
     // ----------------------
     // Exposed API (inputs pattern compatibility)
     // ----------------------
-    const checkValidateError = () => {
+    const focus = () => {
+        if (countryRef.value && typeof countryRef.value.focus === 'function') {
+            countryRef.value.focus()
+        } else if (stateRef.value && typeof stateRef.value.focus === 'function') {
+            stateRef.value.focus()
+        } else if (cityRef.value && typeof cityRef.value.focus === 'function') {
+            cityRef.value.focus()
+        }
+    }
+
+    const checkValidateError = (autoFocus = true) => {
         const refs = [countryRef.value, stateRef.value, cityRef.value]
-        return refs.some(r => r && r.checkValidateError())
+        return refs.some(r => r && r.checkValidateError(autoFocus))
     }
 
     const valueInput = () => {
@@ -266,7 +276,7 @@
         if (cityRef.value) cityRef.value.reset()
     }
 
-    defineExpose({ checkValidateError, valueInput, attribute, reset })
+    defineExpose({ checkValidateError, valueInput, attribute, reset, focus })
 </script>
 
 <style scoped>

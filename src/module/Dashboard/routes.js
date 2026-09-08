@@ -6,6 +6,12 @@ import Owners from "@/module/Owners/views/Owners.vue";
 import Rates_operatives from "@/module/Rates_operatives/views/Rates_operatives.vue";
 import Subsidiaries from "@/module/Subsidiaries/views/Subsidiaries.vue";
 import Companies from "@/module/Companies/views/Companies.vue";
+import Vehicle_expenses from "@/module/vehicle_expenses/views/Vehicle_expenses.vue";
+import Provides from "@/module/provides/views/Provides.vue";
+import Deposits from "@/module/deposits/views/Deposits.vue";
+import Drivers_vehicles from "@/module/drivers_vehicles/views/Drivers_vehicles.vue";
+import Drivers_debts from "@/module/drivers_debts/views/Drivers_debts.vue";
+import Drivers_payments from "@/module/drivers_payments/views/Drivers_payments.vue";
 
 const routesDashboard = [
     {
@@ -54,6 +60,42 @@ const routesDashboard = [
                 path: '/Companies',
                 component: Companies,
                 name: 'companies',
+            },
+
+             {
+                path: '/Vehicle_expenses',
+                component: Vehicle_expenses,
+                name: 'vehicle_expenses',
+            },
+
+             {
+                path: '/Provides',
+                component: Provides,
+                name: 'provides',
+            },
+
+             {
+                path: '/Deposits',
+                component: Deposits,
+                name: 'deposits',
+            },
+
+             {
+                path: '/Drivers_vehicles',
+                component: Drivers_vehicles,
+                name: 'drivers_vehicles',
+            },
+
+             {
+                path: '/Drivers_debts',
+                component: Drivers_debts,
+                name: 'drivers_debts',
+            },
+
+             {
+                path: '/Drivers_payments',
+                component: Drivers_payments,
+                name: 'drivers_payments',
             },
                                     
         ]

@@ -1,6 +1,7 @@
 <script setup>
-    import {ref, onMounted} from 'vue';
+    import { ref, onMounted } from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
+    import UIInputDate from '@/components/UIComponents/UIInputDate.vue';
     import UIAutocomplete from '@/components/UIComponents/UIAutocomplete.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
     import baseInfoSign from '@/components/base/baseInfoSign.vue';
@@ -9,12 +10,13 @@
     import { subsidiariesService } from '@/module/subsidiaries/services/subsidiariesService';
     import { useUserLoginStore } from '@/module/userLogin/stores/useUserLoginStore';
     
-    //initialize  reactive variable
+    //initialize reactive variable
     const inputs = ref([])
     const showSign = ref(false)
     const typeInfo = ref("error")
     const infoMessage = ref(null)
     const disableButton = ref(false)
+    const isUpdated = ref(false)
     const { update, error, message } = useShift_Settlement()
     const autocomplete_branches = ref([])
     onMounted(async () => {
@@ -54,9 +56,10 @@
             const validate = validateInput()
             if (!validate.error){
                 typeInfo.value = "alert"
-                await update(props.id,validate.data);
+                await update(props.id, validate.data);
                 if (!error.value){
                     typeInfo.value = "success"
+                    isUpdated.value = true
                 }
                 showSign.value = true
                 infoMessage.value = message
@@ -76,7 +79,7 @@
         };
 
         response.error = inputs.value.some(input => input.checkValidateError())
-        const data = []
+        const data = {}
         if (!response.error) {
             inputs.value.some((input)=>{
                 data[input.attribute.name] = input.valueInput()
@@ -88,7 +91,7 @@
     }
 
     const showUpdateForm = ()=>{
-        emit('showUpdateForm', false)
+        emit('showUpdateForm', isUpdated.value)
     }
     const emit = defineEmits(['showUpdateForm'])
 
@@ -103,14 +106,14 @@
         <form novalidate @submit.prevent="updateEventButton()">
             <div class="w-12/12">
                 <div class="w-30 mb-2">
-                    <UIButton textButton="Go Back" @click="showUpdateForm()" />
+                    <UIButton textButton="Atrás" @click="showUpdateForm()" />
                 </div>
                 
                 <div>
                      <UIInputText 
                         name="shiset_sequence"
-                        placeholder="Shiset sequence"
-                        field="Shiset sequence"
+                        placeholder="Secuencia de liquidación"
+                        field="Secuencia de liquidación"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.shiset_sequence"
                         required="false"
@@ -119,28 +122,29 @@
                 <div>
                      <UIInputText 
                         name="shiset_owners_fee"
-                        placeholder="Shiset owners fee"
-                        field="Shiset owners fee"
+                        placeholder="Cuota de propietario"
+                        field="Cuota de propietario"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.shiset_owners_fee"
                         required="true"
                     />
                 </div>
                 <div>
-                     <UIInputText 
+                     <UIInputDate 
                         name="shiset_settlement_date"
-                        placeholder="Shiset settlement date"
-                        field="Shiset settlement date"
+                        placeholder="Fecha de liquidación"
+                        field="Fecha de liquidación"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.shiset_settlement_date"
                         required="true"
+                        disable_future="true"
                     />
                 </div>
                 <div>
                      <UIInputText 
                         name="shiset_type"
-                        placeholder="Shiset type"
-                        field="Shiset type"
+                        placeholder="Tipo de liquidación"
+                        field="Tipo de liquidación"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.shiset_type"
                         required="true"
@@ -149,8 +153,8 @@
                 <div>
                      <UIInputText 
                         name="shiset_comments"
-                        placeholder="Shiset comments"
-                        field="Shiset comments"
+                        placeholder="Comentarios"
+                        field="Comentarios"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.shiset_comments"
                         required="false"
@@ -159,8 +163,8 @@
                 <div>
                      <UIInputText 
                         name="raop"
-                        placeholder="Raop"
-                        field="Raop"
+                        placeholder="Tarifa"
+                        field="Tarifa"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.raop"
                         required="true"
@@ -169,8 +173,8 @@
                 <div>
                      <UIInputText 
                         name="dri"
-                        placeholder="Dri"
-                        field="Dri"
+                        placeholder="Conductor"
+                        field="Conductor"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.dri"
                         required="true"
@@ -198,7 +202,7 @@
                 </div>
 
                 <div class="w-30">
-                    <UIButton textButton="Update" />
+                    <UIButton textButton="Actualizar" />
                 </div>
             </div>
         </form>

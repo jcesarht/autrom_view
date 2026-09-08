@@ -8,14 +8,14 @@
         <form novalidate @submit.prevent="saveEventButton()">
             <div class="w-12/12">
                 <div class="w-30 mb-2">
-                    <UIButton textButton="Save" />
+                    <UIButton textButton="Guardar" />
                 </div>
                 
                 <div>
                      <UIInputText 
                         name="raop_name"
-                        placeholder="Nombre de la Tarifa"
-                        field="Nombre de la Tarifa"
+                        placeholder="Nombre de la tarifa"
+                        field="Nombre de la tarifa"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -23,8 +23,8 @@
                 <div>
                      <UIInputText 
                         name="raop_value"
-                        placeholder="Valor de la Tarifa"
-                        field="Valor de la Tarifa"
+                        placeholder="Valor de la tarifa"
+                        field="Valor de la tarifa"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -32,8 +32,8 @@
                 <div>
                      <UIInputText 
                         name="raop_drivers_save_value_default"
-                        placeholder="Valor del Depositos"
-                        field="Valor del Depositos"
+                        placeholder="Valor de depósitos por defecto"
+                        field="Valor de depósitos por defecto"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -41,7 +41,7 @@
                 <div>
                     <UICheckbox
                         name="raop_before_date_deafult"
-                        field="Fecha Anterior por Defecto"
+                        field="Fecha anterior por defecto"
                         ruleText="Inicializar la liquidación con la fecha del día anterior"
                         :checkedValue="1"
                         :uncheckedValue="0"
@@ -60,7 +60,7 @@
                     />
                 </div>
                 <div class="w-30">
-                    <UIButton textButton="Save" />
+                    <UIButton textButton="Guardar" />
                 </div>
             </div>
         </form>
@@ -75,7 +75,7 @@
     import { useOverlay } from '@/stores/useOverlay';
     import { useRates_opeRatives } from '../composables/useRates_opeRatives';
     
-    //initialize  reactive variable
+    //initialize reactive variable
     const inputs = ref([])
     const showSign = ref(false)
     const typeInfo = ref("error")
@@ -121,7 +121,7 @@
         };
 
         response.error = inputs.value.some(input => input.checkValidateError())
-        const data = []
+        const data = {}
         if (!response.error) {
             inputs.value.some((input)=>{
                 data[input.attribute.name] = input.valueInput()

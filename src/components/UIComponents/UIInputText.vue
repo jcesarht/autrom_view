@@ -5,6 +5,7 @@
         </div>
         <div>
             <input
+                ref="inputEl"
                 :class="[
                     'font-semibold',
                     'w-full',
@@ -179,14 +180,15 @@
                 isError.message = exclude_character + ' is not allowed'
             }
         }else if (rule == 'numeric'){
-            exclude_character = input_to_check.match(/[^0-9]/)
-            exclude_character = exclude_character == null? '' : exclude_character
-            input_value.value = String(input_to_check.replace(/[^0-9]/,''))
-            if (exclude_character.length > 0){
-                isError.typeError = 'numeric'
-                isError.error = true
-                isError.message = exclude_character + ' is not numeric; therefore, it is not allowed'
+            let str = String(input_value.value || '')
+            let cleaned = str.replace(/[^0-9.]/g, '')
+            const firstDotIndex = cleaned.indexOf('.')
+            if (firstDotIndex !== -1) {
+                const integerPart = cleaned.slice(0, firstDotIndex + 1)
+                const decimalPart = cleaned.slice(firstDotIndex + 1).replace(/\./g, '')
+                cleaned = integerPart + decimalPart
             }
+            input_value.value = cleaned
         }
     }
 
@@ -220,12 +222,26 @@
 
     }
 
+    const inputEl = ref(null)
+
+    const focus = () => {
+        if (inputEl.value) {
+            inputEl.value.focus()
+            if (typeof inputEl.value.scrollIntoView === 'function') {
+                inputEl.value.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            }
+        }
+    }
+
     /**
     * validate if an error exist and return a boolean
     */
-    const  checkValidateError = ()=>{
+    const checkValidateError = (autoFocus = true) => {
         validateRules()
         validateRulesAfterInput()
+        if (isError.error && autoFocus) {
+            focus()
+        }
         return isError.error
     }
     
@@ -253,7 +269,7 @@
         'autocomplete':input.autocomplete
     }
     // expose the checkValidateError to parent component
-    defineExpose({checkValidateError,valueInput, attribute, reset})
+    defineExpose({checkValidateError, valueInput, attribute, reset, focus})
     
 </script>
 

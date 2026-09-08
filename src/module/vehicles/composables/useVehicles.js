@@ -56,6 +56,8 @@ export function useVehicles(){
             const columns = []
             for (const column in result_data[0]) {
                 if (column === 'com') continue;
+                if (column === 'veh_id') continue;
+                if (column === 'veh_status') continue;
                 if (column === 'sub') {
                     if (sub_count <= 1) continue;
                     columns.push( {data: column,title: 'Sucursal'} )

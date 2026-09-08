@@ -54,17 +54,33 @@ export function useDrivers(){
 
             const result_data = res.result.data
             const columns = []
+            const titleMap = {
+                dri_dni: 'DNI',
+                dri_firts_name: 'Nombres',
+                dri_last_name: 'Apellidos',
+                dri_qualify: 'Calificación',
+                dri_phone: 'Teléfono',
+                dri_birthday: 'F. Nacimiento',
+                dri_email: 'Email',
+                dri_country: 'País',
+                dri_state: 'Depto.',
+                dri_city: 'Ciudad',
+                dri_create_at: 'F. Creación',
+                dri_update_at: 'F. Edición',
+                sub: 'Sucursal'
+            };
+
             for (const column in result_data[0]) {
-                if (column === 'com') continue;
+                if (column === 'dri_id' || column === 'veh_id' || column === 'veh' || column === 'dri_status' || column === 'com') continue;
                 if (column === 'sub') {
                     if (sub_count <= 1) continue;
-                    columns.push( {data: column,title: 'Sucursal'} )
+                    columns.push( {data: column, title: 'Sucursal'} )
                     continue;
                 }
-                let colTitle = (column.charAt(0).toUpperCase() + column.slice(1)).replace("_"," ");
-                columns.push( {data: column,title: colTitle} )
+                let colTitle = titleMap[column] || (column.charAt(0).toUpperCase() + column.slice(1)).replace("_"," ");
+                columns.push( {data: column, title: colTitle} )
             }
-            columns.push({data: "actions_buttons", title: "Actions"})
+            columns.push({data: "actions_buttons", title: "Acciones"})
             //add actions buttons to each row
             //useActionsTableRecord function will return a string with buttons
             for (let i = 0; i < result_data.length; i++) {

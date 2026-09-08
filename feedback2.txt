@@ -1,0 +1,13 @@
+1. Todos lo modulos al hacerle click en el botón "go Back" en el modulo "Update.vue" deben recargar la tabla de consulta automaticamente solo si se ha hecho una actualización.
+
+2. Traslada al español lo nombres de los label de los input de todos los modulos en Vue.
+
+3. En el modulo vehicle el campo "own" no se está enviando al backend en el payload, en su lugar se está enviando "undefinded"
+3.1 En la parte de actualizar del mismo módulo, al traer la info a la vista, el autocompletador de llena con elvalor del Id del conductor, cuando ese valor debe estar oculto pero en el autocompletador debe tener es el nombre del propietario perteneciente a ese ID, y cuando se hace click a actualizar en el payload se debe ir el ID del propietario. El campo "Veh tracker" El componente UICheckbox enla vista update.
+3.2 El ID del vehiculo no debe mostrarse al usuario. Por tanto no debe aparecer en la tabla de consulta.
+3.3 El status del vehiculo no debe mostrarse al usuario por tanto nodebe aparecer en la tabla de consulta.
+
+4. construye un componente llamado UIQuality responsive que al implementarlo se le coloque a travez de promp un número de 1 al 10. Es un componente para claificación. El componente debe tener estrellas de manera línear de acuerdo al número que se le envía al promp del componente. cuando esl usuario escoge una estrella entonces significa que ese es el valor de la calificación donde la estrella numero uno es de valor uno y la estrella n es el valor más alto. Si el componente no recibe un número de la calificación en el prompt, el componente tomará por defecto el 2. Quedando así con solo dos estrellas. Las estrellas deben colorearse de acuerdo al valor escogido. Si el componente tiene 10 estrellas y el usuario hace click sobre la sexta estrella. Entonces las estrellas de la 1 a la 6 se colorean. tambien por promt se le debe enviar los colores de las estrellas, El color sombreado o activo y el color desactivado o no seleccionado.
+
+5. Colocal el componente En el modulo del Conductor en el campo "Dri qualify" de la vista  actualizar y colocale 5 estrellas. El color activo de las estrellas es "bg-blue-500". y el desactivado es bg-blue-500. El nombre del campo es "dri_qualify"
+6. El modulo Conductor no crea conductor. y debe crearlos y los resultado vienen vacios.

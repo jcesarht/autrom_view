@@ -8,13 +8,13 @@
         <form novalidate @submit.prevent="saveEventButton()">
             <div class="w-12/12">
                 <div class="w-30 mb-2">
-                    <UIButton textButton="Save" />
+                    <UIButton textButton="Guardar" />
                 </div>
                 <div>
                      <UIInputText 
                         name="com_name"
-                        placeholder="Company name"
-                        field="Company name"
+                        placeholder="Nombre de la empresa"
+                        field="Nombre de la empresa"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -40,8 +40,8 @@
                 <div>
                      <UIInputText 
                         name="com_total_number_of_car"
-                        placeholder="Number of cars"
-                        field="Number of cars"
+                        placeholder="Número total de vehículos"
+                        field="Número total de vehículos"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -49,8 +49,8 @@
                 <div>
                      <UIInputText 
                         name="com_base_price"
-                        placeholder="Base Price"
-                        field="Base Price"
+                        placeholder="Precio base"
+                        field="Precio base"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -58,8 +58,8 @@
                 <div>
                      <UIInputText 
                         name="com_price_sales"
-                        placeholder="Price Sales"
-                        field="Price Sales"
+                        placeholder="Precio de venta"
+                        field="Precio de venta"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -67,8 +67,8 @@
                 <div>
                      <UIInputText 
                         name="com_currency"
-                        placeholder="Currency"
-                        field="Currency"
+                        placeholder="Moneda"
+                        field="Moneda"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -76,8 +76,8 @@
                 <div>
                      <UIInputText 
                         name="com_taxes"
-                        placeholder="Taxes"
-                        field="Taxes"
+                        placeholder="Impuestos"
+                        field="Impuestos"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -89,8 +89,8 @@
                         :getLabel="c => c.name"
                         :itemKey="c => c.code"
                         required="true"
-                        field ="País"
-                        placeholder ="País"
+                        field="País"
+                        placeholder="País"
                         @select="onSelect"
                         :ref="element => inputs.push(element)"
                     >
@@ -106,8 +106,8 @@
                 <div>
                      <UIInputText 
                         name="com_withholding_tax"
-                        placeholder="Com withholding tax"
-                        field="Com withholding tax"
+                        placeholder="Retención en la fuente"
+                        field="Retención en la fuente"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -115,14 +115,14 @@
                 <div>
                      <UIInputDate 
                         name="com_expiration_date"
-                        placeholder="Expiration Date"
-                        field="Expiration Date"
+                        placeholder="Fecha de expiración"
+                        field="Fecha de expiración"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
                 </div>
                 <div class="w-30">
-                    <UIButton textButton="Save" />
+                    <UIButton textButton="Guardar" />
                 </div>
             </div>
         </form>
@@ -138,7 +138,7 @@
     import { useCompanies } from '../composables/useCompanies';
     import UIAutocomplete from '@/components/UIComponents/UIAutocomplete.vue';
     
-    //initialize  reactive variable
+    //initialize reactive variable
     const inputs = ref([])
     const showSign = ref(false)
     const typeInfo = ref("error")
@@ -185,7 +185,7 @@
         };
 
         response.error = inputs.value.some(input => input.checkValidateError())
-        const data = []
+        const data = {}
         if (!response.error) {
             inputs.value.some((input)=>{
                 data[input.attribute.name] = input.valueInput()
@@ -208,7 +208,7 @@
         countries.value = await autocompleteData()
     });
     function onSelect(item) {
-    console.log('Seleccionado:', item)
+        console.log('Seleccionado:', item)
     }
 
 </script>

@@ -8,14 +8,14 @@
         <form novalidate @submit.prevent="saveEventButton()">
             <div class="w-12/12">
                 <div class="w-30 mb-2">
-                    <UIButton textButton="Save" />
+                    <UIButton textButton="Guardar" />
                 </div>
                 
                 <div>
                      <UIAutocomplete 
                         name="own"
-                        placeholder="Propietario"
-                        field="Own"
+                        placeholder="Buscar propietario..."
+                        field="Propietario"
                         :ref="element => inputs.push(element)"
                         required="true"
                         :fetchSuggestions="fetchOwners"
@@ -34,8 +34,8 @@
                 <div>
                      <UIInputText 
                         name="veh_license_plate"
-                        placeholder="Veh license plate"
-                        field="Veh license plate"
+                        placeholder="Placa del vehículo"
+                        field="Placa del vehículo"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -43,8 +43,8 @@
                 <div>
                      <UIInputText 
                         name="veh_initial_milealge"
-                        placeholder="Veh initial milealge"
-                        field="Veh initial milealge"
+                        placeholder="Kilometraje inicial"
+                        field="Kilometraje inicial"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -52,8 +52,8 @@
                 <div>
                      <UIInputText 
                         name="veh_brand"
-                        placeholder="Veh brand"
-                        field="Veh brand"
+                        placeholder="Marca"
+                        field="Marca"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -61,8 +61,8 @@
                 <div>
                      <UIInputText 
                         name="veh_model"
-                        placeholder="Veh model"
-                        field="Veh model"
+                        placeholder="Modelo"
+                        field="Modelo"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -70,8 +70,8 @@
                 <div>
                      <UIInputText 
                         name="veh_chassis"
-                        placeholder="Veh chassis"
-                        field="Veh chassis"
+                        placeholder="Chasis"
+                        field="Chasis"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -79,8 +79,8 @@
                 <div>
                      <UIInputText 
                         name="veh_engine"
-                        placeholder="Veh engine"
-                        field="Veh engine"
+                        placeholder="Motor"
+                        field="Motor"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -88,17 +88,18 @@
                 <div>
                      <UIInputDate
                         name="veh_show_owner_report_from"
-                        placeholder="Veh show owner report from"
-                        field="Veh show owner report from"
+                        placeholder="Mostrar reporte de propietario desde"
+                        field="Mostrar reporte de propietario desde"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
                 </div>
                 <div>
-                     <UIInputText 
+                     <UICheckbox 
                         name="veh_tracker"
-                        placeholder="Veh tracker"
-                        field="Veh tracker"
+                        field="Rastreador de vehículo"
+                        :checkedValue="1"
+                        :uncheckedValue="0"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -108,9 +109,9 @@
                         countryField="veh_country"
                         stateField="veh_state"
                         cityField="veh_city"
-                        countryLabel="Veh country"
-                        stateLabel="Veh state"
-                        cityLabel="Veh city"
+                        countryLabel="País del vehículo"
+                        stateLabel="Estado / Departamento del vehículo"
+                        cityLabel="Ciudad del vehículo"
                         countryValueType="name"
                         :ref="element => inputs.push(element)"
                         required="false"
@@ -137,7 +138,7 @@
                 </div>
 
                 <div class="w-30">
-                    <UIButton textButton="Save" />
+                    <UIButton textButton="Guardar" />
                 </div>
             </div>
         </form>
@@ -147,6 +148,7 @@
     import {ref, onMounted} from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
     import UIInputDate from '@/components/UIComponents/UIInputDate.vue';
+    import UICheckbox from '@/components/UIComponents/UICheckbox.vue';
     import UILocationPicker from '@/components/UIComponents/UILocationPicker.vue';
     import UIAutocomplete from '@/components/UIComponents/UIAutocomplete.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
@@ -157,7 +159,7 @@
     import { ownersService } from '@/module/owners/services/ownersService';
     import { subsidiariesService } from '@/module/subsidiaries/services/subsidiariesService';
     
-    //initialize  reactive variable
+    //initialize reactive variable
     const inputs = ref([])
     const showSign = ref(false)
     const typeInfo = ref("error")
@@ -184,7 +186,6 @@
     //overlay function
     const overlay = useOverlay()
     const { showOverlay, hiddenOverlay } = overlay
-    //composable functions
 
     //event save function
     const saveEventButton = async()=>{
@@ -219,7 +220,7 @@
         };
 
         response.error = inputs.value.some(input => input.checkValidateError())
-        const data = []
+        const data = {}
         if (!response.error) {
             inputs.value.some((input)=>{
                 if (input.attribute.isLocationPicker) {

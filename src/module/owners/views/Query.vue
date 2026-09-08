@@ -1,13 +1,12 @@
-
 <script setup>
-    import { ref, computed,reactive } from 'vue';
+    import { ref, computed, reactive } from 'vue';
     import DataTable from 'datatables.net-vue3';
     import DataTablesCore from 'datatables.net';
     import 'datatables.net-responsive-dt';
     import baseInfoSign from '@/components/base/baseInfoSign.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
     import Spinner from '../../../components/base/Spinner.vue';
-    import { useOwners} from '../composables/useOwners';
+    import { useOwners } from '../composables/useOwners';
     import { useConfirm } from '@/stores/useUIConfirm';
     import { sleep } from '@/composables/useHelper';
     import Update from './Update.vue';
@@ -32,7 +31,7 @@
         disable: false
     });
     // setup confirm element
-    confirm.textContentUIConfirm = "Do you want to delete this row?";
+    confirm.textContentUIConfirm = "¿Desea eliminar esta fila?";
     let columns = ref([
         {data:"Column1",title:"Column 1"},
     ])
@@ -52,7 +51,8 @@
     ]);
 
     const options = {
-        responsive:true
+        responsive: true,
+        order: []
     }
     //funtions
     const chargeTableInformation = async()=>{
@@ -77,6 +77,13 @@
         search_button.disable = false;
     }
     
+    const handleCloseUpdate = (isUpdated) => {
+        showEditionForm.value = false;
+        if (isUpdated) {
+            chargeTableInformation();
+        }
+    }
+
     // Implement delete logic here
     const deleteRecord = async (id) => {
         const res = await confirm.confirm();
@@ -125,7 +132,7 @@
             <Update 
                 :id="id_record"
                 :dataForUpdate="dataForUpdateRecord"
-                @showUpdateForm="showEditionForm = false"
+                @showUpdateForm="handleCloseUpdate"
             />
         </div>
         <div class="flex justify-center bg-white d-block p-1 mt-1 " v-if="showSpinner">
@@ -136,7 +143,7 @@
                 {{control_sign.message}}
             </baseInfoSign>
             <div class="bg-white d-block p-1 mt-1">
-                <UIButton textButton="Search" @click="chargeTableInformation()" :disable="search_button.disable" />
+                <UIButton textButton="Buscar" @click="chargeTableInformation()" :disable="search_button.disable" />
             </div>
             <div class="bg-white d-block p-1 mt-1">
                 <DataTable

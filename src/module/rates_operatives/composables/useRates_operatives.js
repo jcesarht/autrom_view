@@ -66,7 +66,7 @@ export function useRates_opeRatives(){
             ]
             let index = 0
             for (const column in result_data[0]) {
-                if (column === "sub" || column === "com") continue;
+                if (column === "sub" || column === "com" || column === "raop_status") continue;
                 columns.push( {data: column, title: title[index]} )
                 index++
             }

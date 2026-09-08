@@ -8,14 +8,14 @@
         <form novalidate @submit.prevent="saveEventButton()">
             <div class="w-12/12">
                 <div class="w-30 mb-2">
-                    <UIButton textButton="Save" />
+                    <UIButton textButton="Guardar" />
                 </div>
                 
                 <div>
                      <UIInputText 
                         name="sub_name"
-                        placeholder="Nombre de la Sucursal"
-                        field="Nombre de la Sucursal"
+                        placeholder="Nombre de la sucursal"
+                        field="Nombre de la sucursal"
                         :ref="element => inputs.push(element)"
                         required="true"
                     />
@@ -30,28 +30,14 @@
                     />
                 </div>
                 <div>
-                     <UIInputText 
-                        name="sub_country"
-                        placeholder="País"
-                        field="País"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="sub_state"
-                        placeholder="Estado / Dpto"
-                        field="Estado / Dpto"
-                        :ref="element => inputs.push(element)"
-                        required="false"
-                    />
-                </div>
-                <div>
-                     <UIInputText 
-                        name="sub_city"
-                        placeholder="Ciudad"
-                        field="Ciudad"
+                    <UILocationPicker
+                        countryField="sub_country"
+                        stateField="sub_state"
+                        cityField="sub_city"
+                        countryLabel="País"
+                        stateLabel="Estado / Departamento"
+                        cityLabel="Ciudad"
+                        countryValueType="name"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -59,8 +45,8 @@
                 <div>
                      <UIInputText 
                         name="sub_address"
-                        placeholder="Dirección Postal"
-                        field="Dirección Postal"
+                        placeholder="Dirección postal"
+                        field="Dirección postal"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
@@ -68,15 +54,15 @@
                 <div>
                      <UIInputDate 
                         name="sub_expiration_date"
-                        placeholder="Fecha de Expiración"
-                        field="Fecha de Expiración"
+                        placeholder="Fecha de expiración"
+                        field="Fecha de expiración"
                         :ref="element => inputs.push(element)"
                         required="false"
                     />
                 </div>
 
                 <div class="w-30">
-                    <UIButton textButton="Save" />
+                    <UIButton textButton="Guardar" />
                 </div>
             </div>
         </form>
@@ -88,11 +74,12 @@
     import UIInputDate from '@/components/UIComponents/UIInputDate.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
     import UIAutocomplete from '../../../components/UIComponents/UIAutocomplete.vue';
+    import UILocationPicker from '@/components/UIComponents/UILocationPicker.vue';
     import baseInfoSign from '@/components/base/baseInfoSign.vue';
     import { useOverlay } from '@/stores/useOverlay';
     import { useSubSidiarieS } from '../composables/useSubSidiarieS';
     
-    //initialize  reactive variable
+    //initialize reactive variable
     const inputs = ref([])
     const showSign = ref(false)
     const typeInfo = ref("error")
@@ -139,10 +126,14 @@
         };
 
         response.error = inputs.value.some(input => input.checkValidateError())
-        const data = []
+        const data = {}
         if (!response.error) {
             inputs.value.some((input)=>{
-                data[input.attribute.name] = input.valueInput()
+                if (input.attribute.isLocationPicker) {
+                    Object.assign(data, input.valueInput())
+                } else {
+                    data[input.attribute.name] = input.valueInput()
+                }
             })
             response.data = data;
         }
@@ -165,6 +156,5 @@
     onMounted(async()=>{
         autocomplete_companies.value = await autocompleteDataCompany()
     });
-
 
 </script>

@@ -2,6 +2,9 @@
     <div class="w-full">
         <div>
             <button 
+                :type="type"
+                :disabled="disable"
+                @click="$emit('click', $event)"
                 :class="[
                     backgroudColor,
                     bgHoverColor,
@@ -12,8 +15,7 @@
                     'px-3',
                     'py-2',
                     'font-semibold'
-                ]
-                "
+                ]"
             >
                 {{ textButton }}
             </button>
@@ -24,22 +26,26 @@
 <script setup>
 import { computed } from 'vue';
 
-    const props = defineProps(
-        {
-            'textButton':{
-                type: String,
-                default: 'Button'
-            },
-            'disable':{
-                type: Boolean,
-                default: false
-            },
-            'bgColor':{
-                type: String,
-                default: 'bg-blue-500'
-            },
+    const props = defineProps({
+        'textButton': {
+            type: String,
+            default: 'Button'
+        },
+        'disable': {
+            type: Boolean,
+            default: false
+        },
+        'bgColor': {
+            type: String,
+            default: 'bg-blue-500'
+        },
+        'type': {
+            type: String,
+            default: 'submit'
         }
-    )
+    })
+
+    const emit = defineEmits(['click'])
     
     const backgroudColor = computed(()=>{
         return (!props.disable)? `${props.bgColor}` : 'bg-gray-200' 
@@ -53,8 +59,6 @@ import { computed } from 'vue';
     const cursorPoint = computed(()=>{
         return (!props.disable)? 'cursor-pointer' : 'cursor-not-allowed' 
     })
-
-
 </script>
 
 <style lang="scss" scoped>

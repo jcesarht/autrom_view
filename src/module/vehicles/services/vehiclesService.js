@@ -97,7 +97,7 @@ export const vehiclesService = {
         }
         try{
             const url_request = 'api/v1/vehicles_app/'
-            response.result.data = await axiosInstance.get(url_request,fields)
+            response.result.data = await axiosInstance.get(url_request, { params: fields })
             response.result.http_status = response.result.data.data.http_status
             response.result.data = response.result.data.data.data
             response.result.message = "Responsed successfully in Module"

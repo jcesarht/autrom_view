@@ -11,13 +11,13 @@
     const tabs = [
         {
             id:0,
-            label:"Register",
+            label:"Registrar",
             order:1,
             view: Register 
         },
         {
             id:1,
-            label:"Consult",
+            label:"Consultar",
             order:2,
             view: Query 
         }

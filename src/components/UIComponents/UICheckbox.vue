@@ -3,6 +3,7 @@
         <div class="flex items-center gap-3 px-1 py-2">
             <!-- Checkbox visual -->
             <button
+                ref="buttonEl"
                 type="button"
                 role="checkbox"
                 :aria-checked="isChecked"
@@ -45,7 +46,7 @@
 </template>
 
 <script setup>
-    import { ref, computed, reactive } from 'vue';
+    import { ref, computed, reactive, watch } from 'vue';
 
     const input = defineProps({
         'name': {
@@ -117,14 +118,20 @@
      * 1, "1", true all match when checkedValue is 1.
      */
     const normalize = (v) => {
-        if (v === true  || v === 'true')  return '1';
-        if (v === false || v === 'false') return '0';
-        return String(v);
+        if (v === undefined || v === null) return '0';
+        const str = String(v).toLowerCase().trim();
+        if (str === 'true' || str === '1' || str === 'si' || str === 'sí' || str === 'yes') return '1';
+        if (str === 'false' || str === '0' || str === 'no') return '0';
+        return str;
     };
 
     const isChecked  = ref(normalize(input.value) === normalize(input.checkedValue));
     const inputID    = ref(input.id !== '' ? input.id : input.name + '_checkbox_id');
     const showLabel  = ref(input.field && String(input.field).trim() !== '');
+
+    watch(() => input.value, (newVal) => {
+        isChecked.value = normalize(newVal) === normalize(input.checkedValue);
+    });
 
     const isError = reactive({
         typeError: null,
@@ -181,12 +188,26 @@
         return isChecked.value ? input.checkedValue : input.uncheckedValue;
     };
 
+    const buttonEl = ref(null);
+
+    const focus = () => {
+        if (buttonEl.value) {
+            buttonEl.value.focus();
+            if (typeof buttonEl.value.scrollIntoView === 'function') {
+                buttonEl.value.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    };
+
     /**
      * Runs all validations and returns true if there is an error.
      * Used by parent forms in the standard inputs-ref pattern.
      */
-    const checkValidateError = () => {
+    const checkValidateError = (autoFocus = true) => {
         validateRules();
+        if (isError.error && autoFocus) {
+            focus();
+        }
         return isError.error;
     };
 
@@ -211,7 +232,7 @@
         ruleText:      input.ruleText,
     };
 
-    defineExpose({ checkValidateError, valueInput, attribute, reset });
+    defineExpose({ checkValidateError, valueInput, attribute, reset, focus });
 </script>
 
 <style scoped>

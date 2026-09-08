@@ -12,6 +12,7 @@
                 :data-disable-past="input.disable_pass"
             >
                 <input
+                    ref="inputEl"
                     :class="[
                         'font-semibold',
                         'w-full',
@@ -249,17 +250,31 @@
 
     }
 
+    const inputEl = ref(null)
+
+    const focus = () => {
+        if (inputEl.value) {
+            inputEl.value.focus()
+            if (typeof inputEl.value.scrollIntoView === 'function') {
+                inputEl.value.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            }
+        }
+    }
+
     /**
     * validate if an error exist and return a boolean
     */
-    const  checkValidateError = ()=>{
+    const checkValidateError = (autoFocus = true) => {
         validateRules()
         validateRulesAfterInput()
+        if (isError.error && autoFocus) {
+            focus()
+        }
         return isError.error
     }
     
     const valueInput = ()=>{
-        return input_value.value?? '';
+        return input_value.value ? input_value.value : null;
     }
 
     // reset input
@@ -430,7 +445,7 @@
         'autocomplete':input.autocomplete
     }
     // expose the checkValidateError to parent component
-    defineExpose({checkValidateError,valueInput, attribute, reset})
+    defineExpose({checkValidateError, valueInput, attribute, reset, focus})
     
 </script>
 

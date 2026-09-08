@@ -97,7 +97,7 @@ export const subsidiariesService = {
         }
         try{
             const url_request = 'api/v1/subsidiaries_app/'
-            response.result.data = await axiosInstance.get(url_request,fields)
+            response.result.data = await axiosInstance.get(url_request, { params: fields })
             response.result.http_status = response.result.data.data.http_status
             response.result.data = response.result.data.data.data
             response.result.message = "Responsed successfully in Module"
@@ -166,7 +166,7 @@ export const subsidiariesService = {
         }
         try{
             const url_request = 'api/v1/companies_app/'
-            response.result.data = await axiosInstance.get(url_request,fields)
+            response.result.data = await axiosInstance.get(url_request, { params: fields })
             response.result.http_status = response.result.data.data.http_status
             response.result.data = response.result.data.data.data
             response.result.message = "Responsed successfully in companies service."

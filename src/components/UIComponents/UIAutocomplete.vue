@@ -89,6 +89,14 @@
                 type: Number,
                 default: -1,
             },
+        'maxChar' : {
+                type: Number,
+                default: -1,
+            },
+        'name' : {
+                type: String,
+                default: '',
+            },
         'field' : {
             type: String,
             default:''
@@ -97,12 +105,14 @@
             type: String,
             default: "all",
         },
+        ruleText: { type: String, default: '' },
         'required' : {
               type: String,
               default: "false",
         },
-        getLabel: { type: Function, default: (i) => (typeof i === 'object' && i !== null ? i.label ?? i.name ?? String(i) : String(i)) },
-        itemKey: { type: Function, default: (i, idx) => (i && i.id) ?? idx },
+        itemLabel: { type: [String, Array, Function], default: null },
+        getLabel: { type: Function, default: null },
+        itemKey: { type: [Function, String], default: null },
         itemValue: { type: String, default: 'code' },
         openOnFocus: { type: Boolean, default: true },
     })
@@ -112,7 +122,7 @@ const emit = defineEmits(['update:modelValue', 'select'])
 const id = `autocomplete-${Math.random().toString(36).slice(2, 9)}`
 const listId = `${id}-list`
 const inputEl = ref(null)
-const input_value = ref(props.modelValue ?? '')
+const input_value = ref('')
 const rule = ref(props.rule ?? '')
 const required = (props.required == "true") // assign true or false
 const minChar = props.minChar
@@ -134,11 +144,40 @@ function debounce(fn, ms) {
     }
 
     function display(item) {
-        return props.getLabel(item)
+        if (item === null || item === undefined) return ''
+        if (typeof item !== 'object') return String(item)
+
+        if (props.itemLabel) {
+            if (typeof props.itemLabel === 'function') {
+                return props.itemLabel(item)
+            }
+            if (Array.isArray(props.itemLabel)) {
+                return props.itemLabel
+                    .map(key => item[key])
+                    .filter(val => val !== null && val !== undefined && val !== '')
+                    .join(' - ')
+            }
+            if (typeof props.itemLabel === 'string' && props.itemLabel.trim() !== '') {
+                if (item[props.itemLabel] !== undefined) {
+                    return String(item[props.itemLabel])
+                }
+            }
+        }
+
+        if (typeof props.getLabel === 'function') {
+            return props.getLabel(item)
+        }
+
+        return item.label ?? item.name ?? item.title ?? String(item)
     }
 
     function getKey(item, idx) {
-        return props.itemKey(item, idx)
+        if (typeof props.itemKey === 'function') return props.itemKey(item, idx)
+        if (typeof props.itemKey === 'string' && item && item[props.itemKey] !== undefined) return item[props.itemKey]
+        if (item && typeof item === 'object') {
+            return item[props.itemValue] ?? item.id ?? item.code ?? idx
+        }
+        return idx
     }
 
     function itemId(idx) {
@@ -215,6 +254,11 @@ function debounce(fn, ms) {
   )
 
 function onInput() {
+  if (selected.value && typeof selected.value === 'object') {
+      if (input_value.value !== display(selected.value)) {
+          selected.value = null
+      }
+  }
   emit('update:modelValue', input_value.value)
   if (props.fetchSuggestions && input_value.value.length >= props.minChars) {
     doSearch(input_value.value)
@@ -269,15 +313,16 @@ function onInput() {
     
     function select(item) {
       const val = item
+      selected.value = val
+      input_value.value = typeof val === 'object' ? display(val) : String(val)
       emit('update:modelValue', val)
       emit('select', val)
-      input_value.value = typeof val === 'object' ? display(val) : String(val)
-      selected.value = val
       close()
     }
     
     function clear() {
       input_value.value = ''
+      selected.value = null
       internalItems.value = []
       emit('update:modelValue', '')
       open()
@@ -287,9 +332,45 @@ function onInput() {
 // Sync with v-model / outside
 // ----------------------
 watch(() => props.modelValue, (v) => {
-  // when parent updates modelValue externally, sync input text
-  if (v === null || v === undefined) input_value.value = ''
-  else input_value.value = typeof v === 'object' ? display(v) : String(v)
+  if (v === null || v === undefined || v === '') {
+      input_value.value = ''
+      selected.value = null
+  } else if (typeof v === 'object') {
+      selected.value = v
+      input_value.value = display(v)
+  } else {
+      const source = internalItems.value.length ? internalItems.value : props.items
+      const found = source.find(item => {
+          if (item && typeof item === 'object') {
+              const val = item[props.itemValue] ?? item.id ?? item.code
+              return String(val) === String(v)
+          }
+          return String(item) === String(v)
+      })
+      if (found) {
+          selected.value = found
+          input_value.value = display(found)
+      } else {
+          selected.value = v
+          input_value.value = String(v)
+      }
+  }
+}, { immediate: true })
+
+watch(internalItems, (newItems) => {
+  if (props.modelValue && typeof props.modelValue !== 'object' && newItems.length) {
+      const found = newItems.find(item => {
+          if (item && typeof item === 'object') {
+              const val = item[props.itemValue] ?? item.id ?? item.code
+              return String(val) === String(props.modelValue)
+          }
+          return String(item) === String(props.modelValue)
+      })
+      if (found) {
+          selected.value = found
+          input_value.value = display(found)
+      }
+  }
 })
 
 // Close on outside click
@@ -310,34 +391,35 @@ function onDocumentClick(e) {
 
     const validateRules = () => {
         let exclude_character = '';
-        let input_to_check = String(input_value.value).trim()
+        let val = valueInput()
+        let input_to_check = String(val !== null && val !== undefined ? val : '').trim()
         input_to_check  = (input_to_check == 'undefined')? '' : input_to_check
         isError.typeError = ''
         isError.error = false
         isError.message = ''
-        if (required && input_to_check == '' ) {
+        if (required && (input_to_check == '' || String(input_value.value).trim() == '')) {
             isError.typeError = 'empty'
             isError.error = true
-            isError.message = 'This field is required'
+            isError.message = 'Este campo es obligatorio'
         }else if (rule == 'alphanumeric') {
             //this sentence only alphanumerics plus "_" characters are accepted
             exclude_character = input_to_check.match(/[^A-Z-a-z-0-9ñÑ\_]/)
             exclude_character = exclude_character == null? '' : exclude_character
-            input_value.value = String(input_to_check.replace(/[^A-Z-a-z-0-9ñÑ\_]/,''))
             if (exclude_character != null && exclude_character.length > 0){
                 isError.typeError = 'alphanumeric'
                 isError.error = true
-                isError.message = exclude_character + ' is not allowed'
+                isError.message = exclude_character + ' no está permitido'
             }
         }else if (rule == 'numeric'){
-            exclude_character = input_to_check.match(/[^0-9]/)
-            exclude_character = exclude_character == null? '' : exclude_character
-            input_value.value = String(input_to_check.replace(/[^0-9]/,''))
-            if (exclude_character.length > 0){
-                isError.typeError = 'numeric'
-                isError.error = true
-                isError.message = exclude_character + ' is not numeric; therefore, it is not allowed'
+            let str = String(input_value.value || '')
+            let cleaned = str.replace(/[^0-9.]/g, '')
+            const firstDotIndex = cleaned.indexOf('.')
+            if (firstDotIndex !== -1) {
+                const integerPart = cleaned.slice(0, firstDotIndex + 1)
+                const decimalPart = cleaned.slice(firstDotIndex + 1).replace(/\./g, '')
+                cleaned = integerPart + decimalPart
             }
+            input_value.value = cleaned
         }
     }
 
@@ -347,14 +429,14 @@ function onDocumentClick(e) {
          if (minChar > 0 && input_value.value.length < minChar){
             isError.typeError = 'minimun_chars'
             isError.error = true
-            isError.message = 'Please enter at least '+ minChar +' characters'
+            isError.message = 'Por favor ingrese al menos '+ minChar +' caracteres'
         }
         
         // validate maximum characters
         if (maxChar > 0 && input_value.value.length > maxChar){
             isError.typeError = 'maximun_chars'
             isError.error = true
-            isError.message = 'Please enter no more than '+ maxChar +' characters'
+            isError.message = 'Por favor ingrese no más de '+ maxChar +' caracteres'
         }
 
         //validate email format
@@ -365,28 +447,53 @@ function onDocumentClick(e) {
             if (!input_to_check.match(validEmail)){
                 isError.typeError = 'email_format'
                 isError.error = true
-                isError.message = 'Please enter a valid email format'
+                isError.message = 'Por favor ingrese un correo válido'
             }
         }
 
     }
 
-    const valueInput = ()=>{
-        return selected.value ? selected.value[props.itemValue] ?? '' : '';
+    const valueInput = () => {
+        if (selected.value !== null && selected.value !== undefined && selected.value !== '') {
+            if (typeof selected.value === 'object') {
+                return selected.value[props.itemValue] ?? selected.value.id ?? selected.value.code ?? selected.value;
+            }
+            return selected.value;
+        }
+        if (props.modelValue !== null && props.modelValue !== undefined && props.modelValue !== '') {
+            if (typeof props.modelValue === 'object') {
+                return props.modelValue[props.itemValue] ?? props.modelValue.id ?? props.modelValue.code ?? props.modelValue;
+            }
+            return props.modelValue;
+        }
+        return '';
+    }
+
+    const focus = () => {
+        if (inputEl.value) {
+            inputEl.value.focus()
+            if (typeof inputEl.value.scrollIntoView === 'function') {
+                inputEl.value.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            }
+        }
     }
 
      /**
     * validate if an error exist and return a boolean
     */
-    const  checkValidateError = ()=>{
+    const checkValidateError = (autoFocus = true) => {
         validateRules()
         validateRulesAfterInput()
+        if (isError.error && autoFocus) {
+            focus()
+        }
         return isError.error
     }
 
     // reset input
     const reset = ()=>{
         input_value.value = "";
+        selected.value = null;
         return input_value.value;
     }
 
@@ -394,18 +501,16 @@ function onDocumentClick(e) {
         'name':props.name,
         'placeholder':props.placeholder,
         'id':props.id,
-        //'value':props.value,
         'field':props.field,
-        //'required':props.required,
         'rule':props.rule,
-        //'ruleText':props.ruleText,
         'minChar':props.minChar,
         'maxChar':props.maxChar,
         'itemValue':props.itemValue,
+        'itemLabel':props.itemLabel,
     }
 
     // expose the checkValidateError to parent component
-    defineExpose({checkValidateError,valueInput, attribute, reset})
+    defineExpose({checkValidateError, valueInput, attribute, reset, focus})
     
 </script>
 

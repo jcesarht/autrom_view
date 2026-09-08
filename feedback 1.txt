@@ -1,0 +1,22 @@
+8cbc3786-a028-4a1d-bf6b-850a9bababd2
+En VUE o en frontend debemos trabajar en los siguinetes punto    s
+1. En el modulo de tarifas o "rates_operatives", en la sección de consultar en el input llamado "Fecha Anterior por Defecto" si el resultado es "Si" o d valor 1 entonces la caja de selector debe estar de manera activada
+
+2. En el molulo de conductor en la sección de registrar el campo Calificación no debe aparecer en el formulario, y sí debe aparecer en las demas caracterizticas del módulo.
+
+3. Los campos País, Estado y ciudad debe ser el componente src\components\UIComponents\UILocationPicker.vue y no debe ser campos aislados.
+
+4. En el modulo de liquidación el checkbox "Conductor Relevo" debe hacer aparecer el campo "Conductor" y debe ocultarlo tambien. además si el campo "Placa" y el campo "Tarifa" al ser seleccionados se realiza una busqueda a la tabla "drivers_vehicles" y debe mostrar al conductor "Nombre y documento DNI" en un campo input no editable, y que solo será editable si el usuario decide seleccionar el checkbox para que aparezca el campo auto completable "Conductor".
+
+5. El campo conductor debe trabajr de la misma forma como lo hace en el modulo "Conductores", debe permitir obtener al conductor no solo por el número de cedula o DNI, si no tambien por el nombre. Si el usuario escribe el nombre del conductor o parte del nombre entonces el autocompletador debe trabajar.
+
+6. El dropdown del Tarifa  no funciona, debe oobtener las tarifas disponibles desde la tabla "rates_operatives" y solo debe traer las tarifas activas.
+
+7. El campo kilometraje debe compartir la fila con un botón que obtenga un icono de GPS, y debe estar distribuido en anchura 80% el campo y 20% el botón.
+8. En el módulo "Vehicle_expenses" el campo tarifa debe ser un dropdown al igual que otros módulo debe traer las tarifas desde la tabla "rates_operatives" y solo debe traer las tarifas activas.
+9. En el módulo proveedores en la sección de registrar no debe aparecer el campo sucursal, ese valor es obtenido y almacenado de acuerdo al token del usuario como hacen los demas modulos.
+10. En el módulo Depósito el campo "Conductor" debe ser auto completado y al igual que el módulo de vehículos cuando autocompleta el valor de propietario debe aparecer el documento de identidad y la informacion del conductor que tiene asignado. 
+11. En el módulo conductores vehículos tambien debes reperar el autocompletado de conductor y el dropdown de tarifas.
+12. En el módulo Deuda tambien se debe reparar el autocompletado del conductor, y en el caso de que en e campo del "tipo de deuda" al seleccionar tarifa  debe aparecer el dropdown de "Tarifa" y la fecha de la deuda.
+13. En el módulo Abono tambien se debe reparar el autocompletado del conductor, y en el caso de que en e campo del "tipo de abono" al seleccionar tarifa  debe aparecer el dropdown de "Tarifa" y la fecha de la abono.
+14. En el módulo (Owner) propietario en la sección de registrar no debe aparecer el campo sucursal, ese valor es obtenido y almacenado de acuerdo al token del usuario como hacen los demas modulos.

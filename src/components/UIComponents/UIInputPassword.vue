@@ -5,6 +5,7 @@
         </div>
         <div>
             <input
+                ref="inputEl"
                 :class="[
                     'font-semibold',
                     'w-full',
@@ -217,12 +218,26 @@ import { ref, computed, reactive } from 'vue';
 
     }
 
+    const inputEl = ref(null)
+
+    const focus = () => {
+        if (inputEl.value) {
+            inputEl.value.focus()
+            if (typeof inputEl.value.scrollIntoView === 'function') {
+                inputEl.value.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            }
+        }
+    }
+
      /**
     * validate if an error exist and return a boolean
     */
-    const  checkValidateError = ()=>{
+    const checkValidateError = (autoFocus = true) => {
         validateRules()
         validateRulesAfterInput()
+        if (isError.error && autoFocus) {
+            focus()
+        }
         return isError.error
     }
     // reset input
@@ -235,7 +250,7 @@ import { ref, computed, reactive } from 'vue';
         return input_value.value;
     }
     // expose the checkValidateError to parent component
-    defineExpose({checkValidateError,valueInput, reset})
+    defineExpose({checkValidateError, valueInput, reset, focus})
 </script>
 
 <style lang="scss" scoped>

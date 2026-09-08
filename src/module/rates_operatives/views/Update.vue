@@ -1,5 +1,5 @@
 <script setup>
-    import {ref} from 'vue';
+    import { ref } from 'vue';
     import UIInputText from '@/components/UIComponents/UIInputText.vue';
     import UICheckbox from '@/components/UIComponents/UICheckbox.vue';
     import UIButton from '@/components/UIComponents/UIButton.vue';
@@ -7,13 +7,15 @@
     import { useOverlay } from '@/stores/useOverlay';
     import { useRates_opeRatives } from '../composables/useRates_opeRatives';
     
-    //initialize  reactive variable
+    //initialize reactive variable
     const inputs = ref([])
     const showSign = ref(false)
     const typeInfo = ref("error")
     const infoMessage = ref(null)
     const disableButton = ref(false)
+    const wasUpdated = ref(false)
     const { update, error, message } = useRates_opeRatives()
+
     //props
     const props = defineProps({
         id: {
@@ -44,9 +46,10 @@
             const validate = validateInput()
             if (!validate.error){
                 typeInfo.value = "alert"
-                await update(props.id,validate.data);
+                await update(props.id, validate.data);
                 if (!error.value){
                     typeInfo.value = "success"
+                    wasUpdated.value = true
                 }
                 showSign.value = true
                 infoMessage.value = message
@@ -66,7 +69,7 @@
         };
 
         response.error = inputs.value.some(input => input.checkValidateError())
-        const data = []
+        const data = {}
         if (!response.error) {
             inputs.value.some((input)=>{
                 data[input.attribute.name] = input.valueInput()
@@ -78,7 +81,7 @@
     }
 
     const showUpdateForm = ()=>{
-        emit('showUpdateForm', false)
+        emit('showUpdateForm', wasUpdated.value)
     }
     const emit = defineEmits(['showUpdateForm'])
 
@@ -93,14 +96,14 @@
         <form novalidate @submit.prevent="updateEventButton()">
             <div class="w-12/12">
                 <div class="w-30 mb-2">
-                    <UIButton textButton="Go Back" @click="showUpdateForm()" />
+                    <UIButton textButton="Atrás" @click="showUpdateForm()" />
                 </div>
                 
                 <div>
                      <UIInputText 
                         name="raop_name"
-                        placeholder="Nombre de la Tarifa"
-                        field="Nombre de la Tarifa"
+                        placeholder="Nombre de la tarifa"
+                        field="Nombre de la tarifa"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.raop_name"
                         required="true"
@@ -109,8 +112,8 @@
                 <div>
                      <UIInputText 
                         name="raop_value"
-                        placeholder="Valor de la Tarifa"
-                        field="Valor de la Tarifa"
+                        placeholder="Valor de la tarifa"
+                        field="Valor de la tarifa"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.raop_value"
                         required="true"
@@ -119,8 +122,8 @@
                 <div>
                      <UIInputText 
                         name="raop_drivers_save_value_default"
-                        placeholder="Valor del Depositos"
-                        field="Valor del Depositos"
+                        placeholder="Valor de depósitos por defecto"
+                        field="Valor de depósitos por defecto"
                         :ref="element => inputs.push(element)"
                         :value="props.dataForUpdate.raop_drivers_save_value_default"
                         required="false"
@@ -129,7 +132,7 @@
                 <div>
                     <UICheckbox
                         name="raop_before_date_deafult"
-                        field="Fecha Anterior por Defecto"
+                        field="Fecha anterior por defecto"
                         ruleText="Inicializar la liquidación con la fecha del día anterior"
                         :checkedValue="1"
                         :uncheckedValue="0"
@@ -149,7 +152,7 @@
                     />
                 </div>
                 <div class="w-30">
-                    <UIButton textButton="Update" />
+                    <UIButton textButton="Actualizar" />
                 </div>
             </div>
         </form>
